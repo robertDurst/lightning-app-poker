@@ -4,6 +4,7 @@ var publicIp = require("public-ip");
 var hostServer = require('./server');
 var axios = require('axios');
 var ngrok = require('../../../../ngrok/index.js');
+var ngrok2 = require('../../../../ngrok/index.js');
 
 const host_socket = ioClient("https://secure-depths-49472.herokuapp.com/");
 let hosting = false;
@@ -14,25 +15,36 @@ let ngrokInstance;
 
 function disconnect() {
   hosting = false;
-  ngrok.kill();
+  ngrok.kill(() => {
+    console.log("NGROK killed");
+  });
   hostServer.closeServer();
 }
 
-async function connect(gameName) {
+async function connect(gameName, pubKey) {
+  console.log("HERE", pubKey);
   hosting = true;
   let external_ip = await publicIp.v4();
   let game = hostServer.startServer();
-  ngrok.kill();
-  ngrok.connect(9090, function (err, url) {
-    console.log(err);
-    host_socket.emit('HOST_CONNECT', {
-      internal_ip: ip.address(),
-      game_name: gameName,
-      external_ip: external_ip,
-      game_socket_ip: url,
-      activePlayers: game.gameState.players.length,
-    })
+  ngrok.kill((data) => {
+    console.log("ngrok killed", data);
   });
+  try {
+    ngrok.connect(10009, function (err, url) {
+      // console.log("ERROR", err ? err.details : '');
+      // console.log('WORKDED', url);
+      host_socket.emit('HOST_CONNECT', {
+        internal_ip: ip.address(),
+        game_name: gameName,
+        external_ip: external_ip,
+        lnd_url: pubKey+"@"+url,
+        game_socket_ip: url,
+        activePlayers: game.gameState.players.length,
+      })
+    });
+  } catch(err) {
+    console.log("ERROR", err);
+  }
 }
 
 

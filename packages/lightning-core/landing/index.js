@@ -2,6 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { RaisedButton } from 'material-ui';
 import styles from './Landing.css'
+import styleObj from './styles.js'
+
+
 
 class Landing extends React.Component {
   constructor(props) {
@@ -13,10 +16,15 @@ class Landing extends React.Component {
     this.setState({ x: e.screenX, y: e.screenY });
   }
 
+  componentDidMount() {
+    console.log(styles);
+    console.log(styleObj);
+  }
+
   render() {
     const { x, y } = this.state;
     return (
-    <div className={styles.container} onMouseMove={this._onMouseMove.bind(this)}>
+    <div style={styleObj.container} onMouseMove={this._onMouseMove.bind(this)}>
       <div className={styles.container_header}>
       </div>
       <div className={styles.container_body}>

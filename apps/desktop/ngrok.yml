@@ -1,0 +1,8 @@
+# authtoken: xxxxxxxxxxxxxxxxxxxxx
+tunnels:
+#   game-host:
+#     addr: 9090
+#     proto: http
+  lnd:
+    addr: 10009
+    proto: http

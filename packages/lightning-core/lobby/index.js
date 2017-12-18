@@ -1,13 +1,12 @@
-const React = require('react')
-const {Link} = require('react-router-dom');
-const axios = require('axios');
-const io = require('socket.io-client');
+import React  from 'react'
+import {Link}  from 'react-router-dom';
+import axios from 'axios';
+import io  from 'socket.io-client';
 import { connect } from 'react-redux';
 import { actions as accountActions } from '../accounts'
 // import { socketConnect } from '../../actions/index';
 import { withRouter } from 'react-router'
 import { store } from '../../lightning-store/index.js'
-
 
 import GameRoomTable from './GameRoomTable';
 import { RaisedButton } from 'material-ui';
@@ -35,7 +34,7 @@ class Lobby extends React.Component {
   }
 
    handleStartHost() {
-         startHost.connect(this.state.gameName)
+         startHost.connect(this.state.gameName, this.props.pubkey)
          this.setState({
            open: false,
            hosting: true
@@ -108,7 +107,7 @@ class Lobby extends React.Component {
               onClick={this.handleClick.bind(this)}
             />
           </div>
-          <h1 className={styles.username_top}> Welcome {this.state.currentUser.username}</h1>
+          <h1 className={styles.username_top}> Welcome {this.props.pubkey}</h1>
           <p className={styles.balance_top}>Bank Account: {this.props.balances.wallet} BTC</p>
         </div>
         <div className={styles.container_body}>
@@ -153,6 +152,11 @@ export default withRouter(connect(
     pubkey: store.getAccountPubkey(state),
     currency: store.getCurrency(state),
     balances: store.getAccountBalances(state),
+    address: store.getAddress(state),
+    logs: store.getRecentLogs(state),
+    numPeers: store.getNumPeers(state),
+    isTestnet: store.getTestnet(state),
+    chains: store.getChains(state),
   }), {
     fetchAccount: accountActions.fetchAccount,
     fetchBalances: accountActions.fetchBalances,

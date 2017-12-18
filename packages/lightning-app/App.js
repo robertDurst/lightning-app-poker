@@ -2,7 +2,8 @@ import React from 'react'
 
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { Box } from 'lightning-components'
-import { LandingPage, LobbyPage } from 'lightning-core'
+import { Notifications } from 'lightning-notifications'
+import { LandingPage, LobbyPage, Streams } from 'lightning-core'
 
 const App = () => {
   return (
@@ -12,6 +13,8 @@ const App = () => {
           <Route path="/lobby" component={ LobbyPage } />
           <Route render={ () => <Redirect to="/landing" /> } />
         </Switch>
+        <Notifications />
+        <Streams />
     </Box>
   )
 }

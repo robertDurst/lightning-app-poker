@@ -25,6 +25,7 @@ const initialState = {
     wallet: 0,
     channel: 0,
   },
+  isTestnet: 'pizza',
   channels: [],
   pendingChannels: [],
   loadingChannels: false,
@@ -85,6 +86,9 @@ export const actions = {
       schema: account => ({
         pubkey: account.identity_pubkey,
         isSynced: account.synced_to_chain,
+        isTestnet: account.testnet,
+        chains: account.chains,
+        numPeers: account.num_peers,
       }),
     },
   }),
@@ -261,6 +265,9 @@ export const actions = {
 
 export const selectors = {
   getSyncedToChain: state => state.isSynced,
+  getChains: state => state.chains,
+  getTestnet: state => state.isTestnet,
+  getNumPeers: state => state.numPeers,
   getServerRunning: state => state.serverRunning,
   getAccountPubkey: state => state.pubkey,
   getCurrency: state => state.currency,

@@ -1,6 +1,7 @@
 import webpack from 'webpack'
 import path from 'path'
 import validate from 'webpack-validator'
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 export default validate({
   module: {
@@ -17,7 +18,7 @@ export default validate({
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         loader: 'file',
-      },
+      }
     ],
   },
 
