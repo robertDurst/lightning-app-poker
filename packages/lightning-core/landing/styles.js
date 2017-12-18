@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // const styles = reactCSS({
 //   'default': {
 //     box: {
@@ -49,3 +50,18 @@
 // }
 //
 // export default styles
+=======
+import reactCSS from 'reactcss'
+
+export default reactCSS({
+  default: {
+    container: {
+      backgroundColor: '#4CAF50',
+      height: '100%',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+    }
+  },
+})
+>>>>>>> 2f328fc35f63514f425708d5ba0556085f608d7e
