@@ -7,31 +7,39 @@ export default reactCSS({
       height: '100%',
       width: '100%',
       display: 'flex',
-      flexDirection: 'column',
+
+      flexDirection: 'column'
     },
-    gamehost_table_container: {
-      flex: 7,
+    container_header: {
+      flex: '1'
+    },
+    container_body: {
+      flex: 10,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column'
+    },
+    title_container: {
+      flex: '5',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    title: {
+      fontSize: '100pt',
+      fontFamily: "Poker Font",
+      fontWeight: 'lighter'
+    },
+    connect_button_container: {
+      flex: '1',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
     },
-    body_footer_container: {
-      flex: 2,
+    containerfooter: {
+      flex: '1',
     },
-    gamehost_table: {
-      width: '75%',
-      height: '500px',
-    },
-    player_container: {
-      display: 'flex',
-    },
-    body_footer_container: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    container_footer: {
-      flex: 1,
-    }
+
   },
 })

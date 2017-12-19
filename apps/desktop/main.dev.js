@@ -1,6 +1,6 @@
 /* eslint-disable global-require, no-console */
 
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu, protocol } from 'electron'
 import path from 'path'
 import windowStateKeeper from 'electron-window-state'
 import _ from 'lodash'
