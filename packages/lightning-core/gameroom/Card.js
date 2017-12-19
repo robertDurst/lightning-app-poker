@@ -1,6 +1,6 @@
 import React from "react";
 import styles from './Card.css'
-
+import path from 'path';
 
 class Card extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -21,7 +21,7 @@ class Card extends React.Component {
       <div id="card" className={styles.Card}>
         <img
           className={faceDown === true ? "back" : "front"}
-          src={`cards/${card}.svg`}
+          src={path.join(__dirname,`cards/${card}.svg`)}
           style={{ width: "100px", height: "auto" }}
         />
       </div>

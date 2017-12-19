@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import Card from './Card.js'
 import Player from './Player.js'
 
-import styles from './Table.css'
+import styles from './table_styles'
 
 
 class Table extends React.Component {
@@ -38,8 +38,8 @@ class Table extends React.Component {
 
   render() {
     return (
-    <div className={styles.Table_overall}>
-      <div className={styles.Table_player_bar}>
+    <div style={styles.Table_overall}>
+      <div style={styles.Table_player_bar}>
         PLAYERS LIST
         {/* {
           this.props.gameState.players ? this.props.gameState.players.map( player => {
@@ -47,14 +47,15 @@ class Table extends React.Component {
           }) : <div></div>
         } */}
       </div>
-      <div className={styles.Table_table}>
-        <div className={styles.Table_table_top}>
+      <div style={styles.Table_table}>
+        <div style={styles.Table_table_top}>
           CARDS OF SPREAD
           {/* {
             this.props.gameState.spread ? this.props.gameState.spread.map( x => {
               return <Card  card={this.cardTranslator(x.value, x.suite)} />
             }) : <div></div>
           } */}
+          <Card card='3H'/>
         </div>
       </div>
     </div>

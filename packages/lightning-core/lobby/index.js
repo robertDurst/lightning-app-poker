@@ -11,7 +11,7 @@ import { store } from '../../lightning-store/index.js'
 import GameRoomTable from './GameRoomTable';
 import { RaisedButton } from 'material-ui';
 import startHost from '../../../apps/desktop/backend/gameHost/GameHostConnect';
-import styles from './Lobby.css'
+import styles from './styles.js'
 import StartHostPopup from './StartHostPopup';
 import GameRoomDetailsPopup from './GameRoomDetailsPopup';
 
@@ -99,20 +99,20 @@ class Lobby extends React.Component {
    }
   render() {
     return (
-    <div className={styles.container_overall}>
-        <div className={styles.container_header}>
-          <div className={styles.hostbutton_top}>
+    <div style={styles.container_overall}>
+        <div style={styles.container_header}>
+          <div style={styles.hostbutton_top}>
             <RaisedButton
               label= {this.state.hosting ? "Disconnect" : "Host"}
               onClick={this.handleClick.bind(this)}
             />
           </div>
-          <h1 className={styles.username_top}> Welcome {this.props.pubkey}</h1>
-          <p className={styles.balance_top}>Bank Account: {this.props.balances.wallet} BTC</p>
+          <h1 style={styles.username_top}> Welcome {this.props.pubkey}</h1>
+          <p style={styles.balance_top}>Bank Account: {this.props.balances.wallet} BTC</p>
         </div>
-        <div className={styles.container_body}>
-          <div className={styles.gamehost_table_container}>
-            <div className={styles.gamehost_table}>
+        <div style={styles.container_body}>
+          <div style={styles.gamehost_table_container}>
+            <div style={styles.gamehost_table}>
               <GameRoomTable
                 handleGameHostClick={this.handleGameHostClick.bind(this)}
                 hostedGames={this.state.hostedGames}
@@ -120,13 +120,13 @@ class Lobby extends React.Component {
             </div>
 
           </div>
-          <div className={styles.body_footer_container}>
+          <div style={styles.body_footer_container}>
             <RaisedButton
               label="Direct Game Connection"
             />
           </div>
         </div>
-        <div className={styles.container_footer}></div>
+        <div style={styles.container_footer}></div>
         <StartHostPopup
         open={this.state.open}
         handleStartHost={this.handleStartHost.bind(this)}

@@ -1,14 +1,14 @@
 import React from 'react'
 import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
-//Components
+// Components
 import Table from './Table.js';
 import Pot from './Pot.js';
 import Hand from './Hand.js';
 import ChoiceBox from './ChoiceBox.js';
 
-//styles
-import styles from './Gameroom.css'
+// Styles
+import styles from './styles'
 
 class Game extends React.Component {
   constructor(props) {
@@ -18,32 +18,34 @@ class Game extends React.Component {
 
   render() {
     return (
-    <div className={styles.container_overall}>
-      <div className={styles.container_header}>
-        <div className={styles.container_header_item}>Game</div>
-        <div className={styles.container_header_item}>Messages</div>
-        <div className={styles.container_header_item}>Options</div>
-        <div className={styles.container_header_item}>About</div>
-        <Link to='/Lobby'><div className={styles.container_header_item}>Leave Game</div></Link>
+    <div style={styles.container_overall}>
+      <div name='header' style={styles.container_header}>
+        <div style={ styles.container_header_item } >Game</div>
+        <div style={ styles.container_header_item } >Messages</div>
+        <div style={ styles.container_header_item } >Options</div>
+        <div style={ styles.container_header_item } >About</div>
+        <Link to='/Lobby'><div style={styles.container_header_item}>Leave Game</div></Link>
       </div>
-      <div className={styles.container_body}>
-        <div className={styles.container_body_top}>
+      <div name='body' style={styles.container_body}>
+        <div name='body-top' style={styles.container_body_top}>
           <Table gameState={this.props.gameState}/>
         </div>
-        <div className={styles.container_body_bottom}>
-          <div className={styles.info_item}>
+        <div name='body-bottom' style={styles.container_body_bottom}>
+          <div name='pot' style={styles.info_item}>
             <Pot gameState={this.props.gameState} />
           </div>
-          <div className={styles.info_item}>
+          <div name='hand'style={styles.info_item}>
             <Hand gameState={this.props.gameState}/>
           </div>
-          <div className={styles.info_item}>
+          <div name='choices'style={styles.info_item}>
             <ChoiceBox gameState={this.props.gameState} socket={this.props.socket}/>
           </div>
         </div>
       </div>
-      <div className={styles.container_footer}>
+      <div name='footer' className={styles.container_footer}>
+        FOOTER
       </div>
+      //
     </div>
   )
   }
