@@ -1,51 +1,64 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { RaisedButton } from 'material-ui';
-import styles from './Landing.css'
-import styleObj from './styles.js'
-
-
+import styles from './styles.js'
+import { connect } from 'react-redux';
+import { actions as accountActions } from '../accounts'
+import { withRouter } from 'react-router'
 
 class Landing extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { x: 0, y: 0 };
   }
 
-  _onMouseMove(e) {
-    this.setState({ x: e.screenX, y: e.screenY });
-  }
 
   componentDidMount() {
-    console.log(styles);
-    console.log(styleObj);
+
+  }
+
+  handleConnect() {
+    this.handleSuccess('036fbaaf580762e887036713d36b2410f12d3c259e7881f5bda0c89ba1b388dc46@192.241.224.112:10011', 100000)
+  }
+
+  async handleSuccess( ip, amount, clear) {
+    var resp = await this.props.createChannel({ ip, amount })
+      .then(() => {
+        this.props.push('/lobby')
+      })
+      // eslint-disable-next-line no-console
+      .catch('HERE',console.error)
   }
 
   render() {
-    const { x, y } = this.state;
     return (
-    <div style={styleObj.container} onMouseMove={this._onMouseMove.bind(this)}>
-      <div className={styles.container_header}>
+    <div style={styles.container}>
+      <div style={styles.container_header}>
       </div>
-      <div className={styles.container_body}>
-          <div className={styles.title_container}>
-            <h1 className={styles.title} style={{fontSize: y/5}}>Poker Game</h1>
+      <div style={styles.container_body}>
+          <div style={styles.title_container}>
+            <h1 style={styles.title}>Poker Game</h1>
           </div>
-          <div className={styles.connect_button_container}>
-            <Link to='/lobby' >
+          <div style={styles.connect_button_container}>
              <RaisedButton
                label="Connect"
+               onClick={this.handleConnect.bind(this)}
              />
-           </Link>
           </div>
 
 
       </div>
-      <div className={styles.container_footer}>
+      <div style={styles.container_footer}>
       </div>
     </div>
   )
   }
 }
 
-module.exports = Landing
+export default withRouter(connect(
+  state => ({
+
+  }), {
+    createChannel: accountActions.createChannel,
+    push: accountActions.push,
+  },
+)(Landing))

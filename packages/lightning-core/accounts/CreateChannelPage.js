@@ -26,12 +26,12 @@ export const CreateChannelPage = ({ createChannel, push }) => {
   const menu = new Menu()
   menu.append(new MenuItem({ label: 'Paste', role: 'paste' }))
   const handleMenu = () => menu.popup(remote.getCurrentWindow())
-  
+
   const handleSuccess = ({ ip, amount }, clear) => {
     createChannel({ ip, amount })
       .then(() => {
         clear()
-        push('/accounts')
+        // push('/accounts')
       })
       // eslint-disable-next-line no-console
       .catch(console.error)
@@ -43,7 +43,7 @@ export const CreateChannelPage = ({ createChannel, push }) => {
         title="Create Channel"
         body="Channels are like tubes of money used to transfer funds within Lightning"
       />
-      <div onContextMenu= { handleMenu }> 
+      <div onContextMenu= { handleMenu }>
         <Form
           name="create-channel"
           fields={ fields }
