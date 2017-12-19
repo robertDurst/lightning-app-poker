@@ -205,7 +205,6 @@ export const actions = {
   createChannel: ({ ip, amount }) => (dispatch) => {
     return new Promise((resolve, reject) => {
       const [pubkey, host] = ip && ip.split('@')
-
       const rejectError = (err) => {
         dispatch(notificationActions.addNotification(err.message))
         reject(err.message)
@@ -224,12 +223,28 @@ export const actions = {
             const call = dispatch(actions.openChannel({ pubkey, amount }))
             call.on('data', handleResolve)
             call.on('error', rejectError)
+            call.on('status', function(status) {
+              // Process status
+              console.log("Current status: " + status);
+            });
+            console.log("PEER ALREADY");
           } else {
             dispatch(actions.connectPeer({ host, pubkey }))
-              .then(() => {
+              .then((data) => {
                 const call = dispatch(actions.openChannel({ pubkey, amount }))
-                call.on('data', handleResolve)
-                call.on('error', rejectError)
+                // call.on('data', handleResolve)
+                // call.on('error', rejectError)
+                call.on('data', function(message) {
+                  console.log('DATA', message);
+                });
+                call.on('error', function(message) {
+                  console.log('error', message);
+                });
+                call.on('status', function(status) {
+                  // Process status
+                  console.log("Current status: " + status);
+                });
+                console.log("NOW A PEER");
               })
               .catch(rejectError)
           }

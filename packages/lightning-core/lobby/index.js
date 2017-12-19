@@ -120,11 +120,25 @@ class Lobby extends React.Component {
             </div>
 
           </div>
-          <div style={styles.body_footer_container}>
+
+          <div>
+            <h1>Connection Info</h1>
+            {
+              this.props.channels.length ?  <h3>Open Chanels</h3> : <p>No Channels Open</p>
+            }
+            {
+              this.props.channels.map( (x,i) => <div key={i}>
+                <p>Channel id: {x.id}</p>
+                <p>Channel capacity: {x.capacity}</p>
+              </div>)
+            }
+          </div>
+          {/* <div className={styles.body_footer_container}>
+
             <RaisedButton
               label="Direct Game Connection"
             />
-          </div>
+          </div> */}
         </div>
         <div style={styles.container_footer}></div>
         <StartHostPopup
@@ -157,8 +171,11 @@ export default withRouter(connect(
     numPeers: store.getNumPeers(state),
     isTestnet: store.getTestnet(state),
     chains: store.getChains(state),
+    channels: store.getChannels(state),
   }), {
     fetchAccount: accountActions.fetchAccount,
     fetchBalances: accountActions.fetchBalances,
+    createChannel: accountActions.createChannel,
+    push: accountActions.push,
   },
 )(Lobby))

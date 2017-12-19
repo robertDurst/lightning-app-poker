@@ -7,6 +7,7 @@ export default reactCSS({
       height: '100%',
       width: '100%',
       display: 'flex',
+
       flexDirection: 'column'
     },
     container_header: {
@@ -39,5 +40,6 @@ export default reactCSS({
     containerfooter: {
       flex: '1',
     },
+
   },
 })
