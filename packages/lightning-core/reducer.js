@@ -15,7 +15,7 @@ export const reducer = combineReducers({
   settings,
   transactions,
   socket,
-  game
+  game,
 })
 
 export { selectors } from './selectors'
