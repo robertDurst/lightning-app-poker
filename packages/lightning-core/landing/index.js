@@ -70,11 +70,22 @@ class Landing extends React.Component {
           </div>
           <div style={styles.connect_button_container}>
 
-             <RaisedButton
-               label="Connect"
-               onClick={this.handleConnect.bind(this)}
-               style={this.state.loading ? {display: 'none'} : {display: 'block'}}
-             />
+            {
+              !this.state.loading ?  <RaisedButton
+                 label="Connect"
+                 onClick={this.handleConnect.bind(this)}
+               /> :
+    <div>
+      <img src="../../../public/389.gif" />
+    </div>
+            }
+
+
+
+
+
+
+
           </div>
 
 
