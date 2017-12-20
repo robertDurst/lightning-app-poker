@@ -75,7 +75,6 @@ const processes = [
     ],
   },
 ]
-
 runProcesses(processes, logs)
 
 let intervalId

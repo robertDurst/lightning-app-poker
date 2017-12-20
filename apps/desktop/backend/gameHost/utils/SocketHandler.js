@@ -11,8 +11,9 @@ let SocketHandler = (io, game) => {
       sendUpdate()
     })
     socket.on('START_GAME', (data) => {
-      game.gameState.dealCards()
-      game.gameState.incrementState()
+      game.addPlayer(1)
+      game.makeHost(1)
+      game.startHand(1)
       sendUpdate()
     })
 
@@ -53,20 +54,16 @@ let SocketHandler = (io, game) => {
 
   function sendUpdate() {
     Object.keys(io.sockets.sockets).forEach(id => {
-      const totalState = game.gameState;
       let customState = {
         socketId: id,
-        pot: totalState.pot,
-        potTotal: totalState.potTotal,
-        spread: totalState.spread,
-        state: totalState.state,
-        folded: totalState.folded,
-        winner: totalState.winner,
-        dealer: totalState.dealer,
-        players: totalState.players.map(x => {
-          x.pubKey
-        }),
-        player_hand: totalState.players.filter(x => id === x.socketId)
+        pot: game.hand.pot,
+        spread: game.hand.spread,
+        state: game.hand.state,
+        order: game.hand.order,
+        winner: game.hand.winner,
+        dealer: game.hand.dealer,
+        players: game.getAllPlayerPackages(),
+        player_hand: game.getPlayerPackage()
       };
       io.sockets.sockets[id].emit("GAME_UPDATE", customState);
       io.sockets.sockets[id].emit("LOG", customState);

@@ -14,8 +14,8 @@ const App = () => {
           <Route path="/game" component={ Gameroom } />
           <Route render={ () => <Redirect to="/landing" /> } />
         </Switch>
-        <Notifications />
-        <Streams />
+        {/* <Notifications />
+        <Streams /> */}
     </Box>
   )
 }

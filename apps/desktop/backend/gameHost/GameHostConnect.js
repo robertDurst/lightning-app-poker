@@ -40,7 +40,7 @@ async function connect(gameName, pubKey) {
         external_ip: external_ip,
         lnd_url: 'NOT REAL',
         game_socket_ip: url,
-        activePlayers: game.gameState.players.length,
+        activePlayers: game.order.length,
       })
     });
   } catch(err) {

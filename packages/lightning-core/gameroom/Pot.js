@@ -1,8 +1,17 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 //Components
-import styles from './Gameroom.css'
+import reactCSS from 'reactcss'
 
+const styles = reactCSS({
+  default: {
+    choice_box_overall: {
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
+    }
+  }
+})
 class Pot extends React.Component {
   constructor(props) {
     super(props)

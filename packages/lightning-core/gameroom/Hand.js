@@ -3,8 +3,7 @@ import {Link} from 'react-router-dom'
 // import cardTranslator from './cardTranslator.js'
 //Components
 import Card from './Card.js';
-import styles from './Gameroom.css'
-
+import reactCSS from 'reactcss'
 class Hand extends React.Component {
   constructor(props) {
     super(props)
@@ -28,11 +27,19 @@ class Hand extends React.Component {
         retStr = value.toString();
     }
 
+
     retStr = retStr + suite[0];
     // console.log(retStr);
     return retStr;
   }
+
   render() {
+    const styles = reactCSS({
+      default: {
+        Hand_overall: {
+          display: 'flex',
+        },
+      }})
     return (
     <div className={styles.Hand_overall}>
       {/* {

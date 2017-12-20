@@ -5,6 +5,8 @@ import path from 'path'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
 
+import socketHandler from '../backend/gameHost/utils/SocketHandler'
+
 import config from '../webpack.config.development'
 
 const app = express()

@@ -5,9 +5,10 @@ import styles from './styles.js'
 import { connect } from 'react-redux';
 import { actions as accountActions } from '../accounts'
 import { withRouter } from 'react-router'
+
+import path from 'path';
 import { store } from '../../lightning-store/index.js'
 import {serverRunningActionSent} from 'redux-grpc-middleware'
-
 
 class Landing extends React.Component {
   constructor(props) {
@@ -65,6 +66,7 @@ class Landing extends React.Component {
       </div>
       <div style={styles.container_body}>
 
+
           <div style={styles.connect_button_container}>
 
             {
@@ -83,6 +85,7 @@ class Landing extends React.Component {
       <img src="https://steemitimages.com/DQmWyBbzVbhUA8upetUbY6kNFUjMknT5XKEBwQZXJyG9Wk7/389.gif" />
     </div>
             }
+
 
 
 
