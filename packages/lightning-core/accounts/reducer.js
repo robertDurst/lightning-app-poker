@@ -164,6 +164,7 @@ export const actions = {
           channelPoint: channel.channel_point,
           active: channel.active,
           status: 'open',
+          totalSatoshisSent: channel.total_satoshis_sent,
         })),
       }),
     },

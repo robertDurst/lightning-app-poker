@@ -7,6 +7,7 @@ var ngrok = require('../../../../ngrok/index.js');
 var ngrok2 = require('../../../../ngrok/index.js');
 
 const host_socket = ioClient("https://secure-depths-49472.herokuapp.com/");
+const lightning_socket = ioClient("192.241.224.112:1279");
 let hosting = false;
 let serverUrl;
 let ngrokInstance;
@@ -30,14 +31,14 @@ async function connect(gameName, pubKey) {
     console.log("ngrok killed", data);
   });
   try {
-    ngrok.connect(10009, function (err, url) {
+    ngrok.connect(9090, function (err, url) {
       // console.log("ERROR", err ? err.details : '');
       // console.log('WORKDED', url);
       host_socket.emit('HOST_CONNECT', {
         internal_ip: ip.address(),
         game_name: gameName,
         external_ip: external_ip,
-        lnd_url: pubKey+"@"+url,
+        lnd_url: 'NOT REAL',
         game_socket_ip: url,
         activePlayers: game.gameState.players.length,
       })
@@ -75,7 +76,14 @@ host_socket.on('PING', (data) => {
   }
 })
 
+// // Receive payment request invoice from Global LND
+// lightning_socket.on('BET_INVOICE', (pay_req) => {
+//   // Send the payment request invoice to the correct pubkey's socket
+//   console.log("PAY REQ", pay_req);
+// });
+
 module.exports = {
   connect,
-  disconnect
+  disconnect,
+  lightning_socket
 }

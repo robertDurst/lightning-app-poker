@@ -17,7 +17,7 @@ class Landing extends React.Component {
   }
 
   handleConnect() {
-    this.handleSuccess('036fbaaf580762e887036713d36b2410f12d3c259e7881f5bda0c89ba1b388dc46@192.241.224.112:10011', 100000)
+    this.handleSuccess('03c04ad48e7c80c71a65fecbaf004c5f6124224ef640fe4bdec7413aedd7746e3e@192.241.224.112:10011', 100000)
   }
 
   async handleSuccess( ip, amount, clear) {
@@ -42,7 +42,6 @@ class Landing extends React.Component {
             <h1 style={styles.title} style={{fontSize: 40}}>Poker Game</h1>
           </div>
           <div style={styles.connect_button_container}>
-            <Link to='/lobby' >
 
              <RaisedButton
                label="Connect"
