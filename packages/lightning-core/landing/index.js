@@ -51,10 +51,6 @@ class Landing extends React.Component {
     console.log("CLOSING", channelPoint);
     const call = this.props.onCloseChannel({ channelPoint, force })
 
-    call.on('data', (data) => {
-      console.log("SUCCESS", data)
-    })
-    call.on('error', err => console.log("ERROR", err))
   }
 
   render() {

@@ -67,8 +67,10 @@ class Lobby extends React.Component {
      })
 
      window.location.hash = '/game'
+     console.log("HOST IP",this.state.curGame.game_socket_ip)
      const socket = io(this.state.curGame.game_socket_ip);
-     console.log(socket);
+
+     socket.emit('CHECK',"HEY THERE")
      this.props.socketConnectionMade(socket);
    }
 
@@ -88,30 +90,30 @@ class Lobby extends React.Component {
    }
 
    handleClick() {
-    // if(this.state.hosting) {
-    //   startHost.disconnect()
-    //   this.setState({
-    //     hosting: false
-    //   })
-    // } else {
-    //   this.setState({
-    //     open: true,
-    //   })
-    //  }
-    startHost.lightning_socket.emit('BET', 'test', 100)
-
-    startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
-      console.log("INVOICE PAID", message);
-    })
-
-
-    // Receive payment request invoice from Global LND
-    startHost.lightning_socket.on('BET_INVOICE', async (pay_req) => {
-      this.handleSuccess({
-        address: pay_req,
-        amount: 100
+    if(this.state.hosting) {
+      startHost.disconnect()
+      this.setState({
+        hosting: false
       })
-    });
+    } else {
+      this.setState({
+        open: true,
+      })
+     }
+    // startHost.lightning_socket.emit('BET', 'test', 100)
+    //
+    // startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
+    //   console.log("INVOICE PAID", message);
+    // })
+    //
+    //
+    // // Receive payment request invoice from Global LND
+    // startHost.lightning_socket.on('BET_INVOICE', async (pay_req) => {
+    //   this.handleSuccess({
+    //     address: pay_req,
+    //     amount: 100
+    //   })
+    // });
    }
 
    handleChannel() {

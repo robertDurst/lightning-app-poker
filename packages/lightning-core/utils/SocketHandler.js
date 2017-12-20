@@ -4,6 +4,7 @@ import { gameUpdate } from '../actions/index';
 export default (socket) => {
 
   socket.on('GAME_UPDATE', (game) => {
+    console.log("UPDATE RECEIVED");
     store.dispatch(gameUpdate(game))
   })
 
