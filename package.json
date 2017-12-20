@@ -32,8 +32,10 @@
     "react-dom": "^15.4.1"
   },
   "dependencies": {
+    "ascii-text-generator": "^1.0.5",
     "axios": "^0.17.1",
     "bufferutil": "^3.0.3",
+    "crypto-js": "^3.1.9-1",
     "extract-text-webpack-plugin": "^3.0.2",
     "ip": "^1.1.5",
     "material-ui": "^0.20.0",

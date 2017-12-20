@@ -21,6 +21,7 @@ import { socketConnect } from '../actions/index';
 import { actions as notificationActions } from 'lightning-notifications'
 
 import { sanitizePaymentRequest } from '../helpers';
+import CryptoJS from 'crypto-js';
 
 
 class Lobby extends React.Component {
@@ -90,6 +91,7 @@ class Lobby extends React.Component {
    }
 
    handleClick() {
+
     if(this.state.hosting) {
       startHost.disconnect()
       this.setState({
@@ -114,6 +116,11 @@ class Lobby extends React.Component {
     //     amount: 100
     //   })
     // });
+   }
+
+   generateMemo(amount, userPubKey, gameId, time = new Date()) {
+     const message = amount + userPubKey + gameId + time;
+     return CryptoJS.SHA256(message).toString(CryptoJS.enc.Hex);
    }
 
    handleChannel() {
