@@ -59,8 +59,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
-    gameState: state.gameState,
-    socket: state.socket,
+    gameState: state.core.game,
+    socket: state.core.socket,
     state: state.core,
   }
 };

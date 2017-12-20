@@ -19,9 +19,12 @@ class ChoiceBox extends React.Component {
   }
   handleListStates() {
     console.log('STATES:',this.props.state);
+    console.log(this.props);
   }
   handleStart() {
-    this.props.socket.emit('START_GAME', this.props.gameState)
+    if (this.props.socket) {
+      this.props.socket.emit('START_GAME', this.props.gameState)
+    }
   }
   // handleDeal() {
   //   this.props.socket.emit('DEAL', this.props.gameState)
@@ -45,8 +48,13 @@ class ChoiceBox extends React.Component {
   //     socketId: this.props.gameState.socketId
   //   })
   // }
-  handleCheck() {
-    this.props.socket.emit('CHECK', this.props.gameState)
+handleCheck() {
+    if (this.props.socket) {
+      console.log("CHECK EMITTED");
+      this.props.socket.emit('CHECK', this.props.gameState)
+    } else {
+      console.log("NO SOCKET");
+    }
   }
   // handleTest() {
   //   this.props.socket.emit('START_BETTING', 123)
@@ -59,9 +67,9 @@ class ChoiceBox extends React.Component {
         {/* <RaisedButton label="Call" primary={true}/> */}
         {/* <RaisedButton label="Bet" primary={true} onClick={this.handleBet().bind(this)}/> */}
         {/* <RaisedButton label="Fold" primary={true}/> */}
-        <RaisedButton label="Start Game" onClick={this.handleStart().bind(this)}/>
+        <RaisedButton label="Start Game" onClick={() => {this.handleStart()}}/>
         {/* <RaisedButton label="Deal cards" onClick={this.handleDeal().bind(this)}/> */}
-        <RaisedButton label="Update Me" onClick={this.handleCheck().bind(this)}/>
+        <RaisedButton label="Update Me" onClick={() => {this.handleCheck()}}/>
         {/* <RaisedButton label="Start Betting Round" onClick={this.handleTest().bind(this)}/> */}
     </div>)
   }
