@@ -15,10 +15,14 @@ import startHost from '../../../apps/desktop/backend/gameHost/GameHostConnect';
 import styles from './styles.js'
 import StartHostPopup from './StartHostPopup';
 import GameRoomDetailsPopup from './GameRoomDetailsPopup';
+
+import { socketConnect } from '../actions/index';
+
 import { actions as notificationActions } from 'lightning-notifications'
 
 import { sanitizePaymentRequest } from '../helpers';
 import CryptoJS from 'crypto-js';
+
 
 class Lobby extends React.Component {
   constructor(props) {
@@ -64,8 +68,11 @@ class Lobby extends React.Component {
      })
 
      window.location.hash = '/game'
-     // const socket = io(this.state.curGame.game_socket_ip)
-     // this.props.socketConnectionMade(socket);
+     console.log("HOST IP",this.state.curGame.game_socket_ip)
+     const socket = io(this.state.curGame.game_socket_ip);
+
+     socket.emit('CHECK',"HEY THERE")
+     this.props.socketConnectionMade(socket);
    }
 
    componentDidMount() {
@@ -84,31 +91,31 @@ class Lobby extends React.Component {
    }
 
    handleClick() {
-    // if(this.state.hosting) {
-    //   startHost.disconnect()
-    //   this.setState({
-    //     hosting: false
-    //   })
-    // } else {
-    //   this.setState({
-    //     open: true,
-    //   })
-    //  }
 
-    startHost.lightning_socket.emit('BET', this.generateMemo(100, "03c04ad48e7c80c71a65fecbaf004c5f6124224ef640fe4bdec7413aedd7746e3e", "2783yhdhu"), 100)
-
-    startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
-      console.log("INVOICE PAID", message);
-    })
-
-
-    // Receive payment request invoice from Global LND
-    startHost.lightning_socket.on('BET_INVOICE', async (pay_req) => {
-      this.handleSuccess({
-        address: pay_req,
-        amount: 100
+    if(this.state.hosting) {
+      startHost.disconnect()
+      this.setState({
+        hosting: false
       })
-    });
+    } else {
+      this.setState({
+        open: true,
+      })
+     }
+    // startHost.lightning_socket.emit('BET', 'test', 100)
+    //
+    // startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
+    //   console.log("INVOICE PAID", message);
+    // })
+    //
+    //
+    // // Receive payment request invoice from Global LND
+    // startHost.lightning_socket.on('BET_INVOICE', async (pay_req) => {
+    //   this.handleSuccess({
+    //     address: pay_req,
+    //     amount: 100
+    //   })
+    // });
    }
 
    generateMemo(amount, userPubKey, gameId, time = new Date()) {
@@ -229,6 +236,20 @@ class Lobby extends React.Component {
 }
 
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
+    fetchAccount: accountActions.fetchAccount,
+    fetchBalances: accountActions.fetchBalances,
+    createChannel: accountActions.createChannel,
+    onCloseChannel: accountActions.startCloseChannel,
+    push: accountActions.push,
+    onDecodePaymentRequest: payActions.decodePaymentRequest,
+    onMakePayment: payActions.makePayment,
+    onSuccess: notificationActions.addNotification,
+  };
+};
+
 export default withRouter(connect(
   state => ({
     serverRunning: store.getServerRunning(state),
@@ -242,14 +263,6 @@ export default withRouter(connect(
     isTestnet: store.getTestnet(state),
     chains: store.getChains(state),
     channels: store.getChannels(state),
-  }), {
-    fetchAccount: accountActions.fetchAccount,
-    fetchBalances: accountActions.fetchBalances,
-    createChannel: accountActions.createChannel,
-    onCloseChannel: accountActions.startCloseChannel,
-    push: accountActions.push,
-    onDecodePaymentRequest: payActions.decodePaymentRequest,
-    onMakePayment: payActions.makePayment,
-    onSuccess: notificationActions.addNotification,
-  },
+  }), mapDispatchToProps,
+
 )(Lobby))

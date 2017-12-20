@@ -5,9 +5,10 @@ import styles from './styles.js'
 import { connect } from 'react-redux';
 import { actions as accountActions } from '../accounts'
 import { withRouter } from 'react-router'
+
+import path from 'path';
 import { store } from '../../lightning-store/index.js'
 import {serverRunningActionSent} from 'redux-grpc-middleware'
-
 
 class Landing extends React.Component {
   constructor(props) {
@@ -52,6 +53,7 @@ class Landing extends React.Component {
   closeChannel({ channelPoint, force }) {
     console.log("CLOSING", channelPoint);
     const call = this.props.onCloseChannel({ channelPoint, force })
+
   }
 
   render() {
@@ -62,6 +64,7 @@ class Landing extends React.Component {
       <div style={styles.container_header}>
       </div>
       <div style={styles.container_body}>
+
 
           <div style={styles.connect_button_container}>
 
@@ -81,6 +84,7 @@ class Landing extends React.Component {
       <img src="https://steemitimages.com/DQmWyBbzVbhUA8upetUbY6kNFUjMknT5XKEBwQZXJyG9Wk7/389.gif" />
     </div>
             }
+
 
 
 
