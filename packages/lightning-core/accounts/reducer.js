@@ -222,30 +222,32 @@ export const actions = {
 
           if (peer) {
             const call = dispatch(actions.openChannel({ pubkey, amount }))
-            call.on('data', handleResolve)
-            call.on('error', rejectError)
+            call.on('data', function(message) {
+              if(message.chan_open) handleResolve();
+            });
+            call.on('error', function(message) {
+              console.log('error', message);
+              rejectError();
+            });
             call.on('status', function(status) {
               // Process status
               console.log("Current status: " + status);
             });
-            console.log("PEER ALREADY");
           } else {
             dispatch(actions.connectPeer({ host, pubkey }))
               .then((data) => {
                 const call = dispatch(actions.openChannel({ pubkey, amount }))
-                // call.on('data', handleResolve)
-                // call.on('error', rejectError)
                 call.on('data', function(message) {
-                  console.log('DATA', message);
+                  if(message.chan_open) handleResolve();
                 });
                 call.on('error', function(message) {
                   console.log('error', message);
+                  rejectError();
                 });
                 call.on('status', function(status) {
                   // Process status
                   console.log("Current status: " + status);
                 });
-                console.log("NOW A PEER");
               })
               .catch(rejectError)
           }

@@ -16,6 +16,8 @@ export const GRPC = 'GRPC/API'
 export const SERVER_STARTING = 'GRPC/SERVER_STARTING'
 export const SERVER_RUNNING = 'GRPC/SERVER_RUNNING'
 
+export let serverRunningActionSent = false;
+
 export default (opts = {}) => {
   const options = { ...defaults, ...opts }
   const serverReady = remote.getGlobal(options.global.serverReady)
@@ -24,7 +26,7 @@ export default (opts = {}) => {
   let client
   let ready = false
   let serverStartingActionSent = false
-  let serverRunningActionSent = false
+  serverRunningActionSent = false
 
   serverReady && serverReady(() => (ready = true))
 
@@ -89,7 +91,7 @@ export default (opts = {}) => {
 
     return new Promise((resolve, reject) => {
       try {
-        client[method] && client[method](body, metadata, { deadline }, 
+        client[method] && client[method](body, metadata, { deadline },
             (error, res) => {
           if (error) {
             ERROR && next({ type: ERROR, error })
