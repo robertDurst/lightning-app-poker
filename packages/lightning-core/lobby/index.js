@@ -15,6 +15,7 @@ import startHost from '../../../apps/desktop/backend/gameHost/GameHostConnect';
 import styles from './styles.js'
 import StartHostPopup from './StartHostPopup';
 import GameRoomDetailsPopup from './GameRoomDetailsPopup';
+import { actions as notificationActions } from 'lightning-notifications'
 
 import { sanitizePaymentRequest } from '../helpers';
 
@@ -32,6 +33,7 @@ class Lobby extends React.Component {
       gameName: '',
       hostedGames: [],
       curGame: {},
+      inChannel: true,
     }
     this.timer = null;
   }
@@ -107,12 +109,39 @@ class Lobby extends React.Component {
     });
    }
 
+   handleChannel() {
+     if(!(this.props.channels.length && !(this.props.channels[0].id))) {
+       this.state.inChannel ?
+         (this.setState({inChannel: false}),
+         this.closeChannel({channelPoint: this.props.channels[0].channelPoint, force: false})):
+         (this.setState({inChannel: true}),
+         this.connectToGlobalLND('03c04ad48e7c80c71a65fecbaf004c5f6124224ef640fe4bdec7413aedd7746e3e@192.241.224.112:10011', 100000));
+     }
+   }
+
+   async connectToGlobalLND( ip, amount, clear) {
+     var resp = await this.props.createChannel({ ip, amount })
+       .then(() => {
+         this.props.push('/lobby')
+       })
+       // eslint-disable-next-line no-console
+       .catch('HERE',console.error)
+   }
+
    handleSuccess({ address, amount }) {
      this.props.onMakePayment({ address, amount })
        .then(() => {
          this.props.fetchAccount()
        })
        .catch(console.error)
+   }
+
+   closeChannel({ channelPoint, force }) {
+     const call = this.props.onCloseChannel({ channelPoint, force })
+     call.on('data', () => {
+       this.props.onSuccess('Channel Closed')
+     })
+     call.on('error', err => onSuccess(err.message))
    }
 
    handleClose() {
@@ -130,9 +159,17 @@ class Lobby extends React.Component {
             <RaisedButton
               label= {this.state.hosting ? "Disconnect" : "Host"}
               onClick={this.handleClick.bind(this)}
+              style={styles.host_button}
+            />
+            <RaisedButton
+              label= {this.state.inChannel ? "Withdraw" : "Reconnect"}
+              onClick={this.handleChannel.bind(this)}
+              style={styles.withdraw_button}
+              backgroundColor={"black"}
+              labelColor={"#ddd"}
             />
           </div>
-          <h1 style={styles.username_top}> Welcome {this.props.pubkey}</h1>
+          <h1 style={styles.username_top}> Welcome <span style={styles.pubkey_header}>{this.props.pubkey}</span></h1>
           <p style={styles.balance_top}>Bank Account: {this.props.balances.wallet} BTC</p>
         </div>
         <div style={styles.container_body}>
@@ -156,7 +193,7 @@ class Lobby extends React.Component {
                 <p>Channel id: {x.id}</p>
                 <p>Remaining Channel Balance: {x.localBalance - x.totalSatoshisSent}</p>
                 <p>Satoshis sent: {x.totalSatoshisSent}</p>
-              </div> : <div>Pending...</div>)
+              </div> : <div key={i}>Pending...</div>)
             }
           </div>
           {/* <div className={styles.body_footer_container}>
@@ -202,8 +239,10 @@ export default withRouter(connect(
     fetchAccount: accountActions.fetchAccount,
     fetchBalances: accountActions.fetchBalances,
     createChannel: accountActions.createChannel,
+    onCloseChannel: accountActions.startCloseChannel,
     push: accountActions.push,
     onDecodePaymentRequest: payActions.decodePaymentRequest,
     onMakePayment: payActions.makePayment,
+    onSuccess: notificationActions.addNotification,
   },
 )(Lobby))

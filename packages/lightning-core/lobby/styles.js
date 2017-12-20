@@ -11,11 +11,14 @@ export default reactCSS({
     },
     container_header: {
       flex: '1',
-      backgroundColor: 'black',
+      backgroundColor: 'blue',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
       padding: '0px 10px'
+    },
+    pubkey_header: {
+      fontSize: '10pt',
     },
     username_top: {
       color: 'white',
@@ -25,9 +28,16 @@ export default reactCSS({
     balance_top: {
       marginRight: '5px',
       color: 'white',
-      flex: '1'
+      flex: '3'
     },
     hostbutton_top: {
+      flex: '3',
+      display: 'flex',
+    },
+    withdraw_button: {
+      flex: '1',
+    },
+    host_button: {
       flex: '1'
     },
     container_body: {
