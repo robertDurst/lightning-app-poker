@@ -5,28 +5,55 @@ import styles from './styles.js'
 import { connect } from 'react-redux';
 import { actions as accountActions } from '../accounts'
 import { withRouter } from 'react-router'
+import { store } from '../../lightning-store/index.js'
+import {serverRunningActionSent} from 'redux-grpc-middleware'
+
 
 class Landing extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      loading: true,
+    }
   }
 
 
   componentDidMount() {
-
+    var self = this;
+    let isReadyInterval = setInterval(function () {
+      if(serverRunningActionSent) {
+        clearInterval(isReadyInterval);
+        self.setState({
+          loading: false,
+        })
+      }
+    }, 1000);
   }
 
   handleConnect() {
-    this.handleSuccess('036fbaaf580762e887036713d36b2410f12d3c259e7881f5bda0c89ba1b388dc46@192.241.224.112:10011', 100000)
+    this.handleSuccess('03c04ad48e7c80c71a65fecbaf004c5f6124224ef640fe4bdec7413aedd7746e3e@192.241.224.112:10011', 100000)
   }
 
-  async handleSuccess( ip, amount, clear) {
+  async handleSuccess( ip, amount ) {
+    this.props.channels.forEach( x => {
+      if(x.status == 'open') this.closeChannel({channelPoint: x.channelPoint, force: false});
+    })
     var resp = await this.props.createChannel({ ip, amount })
       .then(() => {
         this.props.push('/lobby')
       })
       // eslint-disable-next-line no-console
       .catch('HERE',console.error)
+  }
+
+  closeChannel({ channelPoint, force }) {
+    console.log("CLOSING", channelPoint);
+    const call = this.props.onCloseChannel({ channelPoint, force })
+
+    call.on('data', (data) => {
+      console.log("SUCCESS", data)
+    })
+    call.on('error', err => console.log("ERROR", err))
   }
 
   render() {
@@ -42,12 +69,23 @@ class Landing extends React.Component {
             <h1 style={styles.title} style={{fontSize: 40}}>Poker Game</h1>
           </div>
           <div style={styles.connect_button_container}>
-            <Link to='/lobby' >
 
-             <RaisedButton
-               label="Connect"
-               onClick={this.handleConnect.bind(this)}
-             />
+            {
+              !this.state.loading ?  <RaisedButton
+                 label="Connect"
+                 onClick={this.handleConnect.bind(this)}
+               /> :
+    <div>
+      <img src="../../../public/389.gif" />
+    </div>
+            }
+
+
+
+
+
+
+
           </div>
 
 
@@ -64,9 +102,11 @@ class Landing extends React.Component {
 
 export default withRouter(connect(
   state => ({
-
+    channels: store.getChannels(state),
   }), {
     createChannel: accountActions.createChannel,
     push: accountActions.push,
+    onCloseChannel: accountActions.startCloseChannel,
+    onFetchChannels: accountActions.fetchChannels,
   },
 )(Landing))
