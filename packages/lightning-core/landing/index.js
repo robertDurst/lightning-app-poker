@@ -64,19 +64,23 @@ class Landing extends React.Component {
       <div style={styles.container_header}>
       </div>
       <div style={styles.container_body}>
-          <div style={styles.title_container}>
 
-            <h1 style={styles.title} style={{fontSize: 40}}>Poker Game</h1>
-          </div>
           <div style={styles.connect_button_container}>
 
             {
-              !this.state.loading ?  <RaisedButton
+              !this.state.loading ?
+              <div>
+              <div style={styles.title_container}>
+
+                {/* <h1 style={styles.title} style={{fontSize: 40}}>Poker Game</h1> */}
+              </div>
+               <RaisedButton
                  label="Connect"
                  onClick={this.handleConnect.bind(this)}
-               /> :
+               />
+             </div>:
     <div>
-      <img src="../../../public/389.gif" />
+      <img src="https://steemitimages.com/DQmWyBbzVbhUA8upetUbY6kNFUjMknT5XKEBwQZXJyG9Wk7/389.gif" />
     </div>
             }
 
