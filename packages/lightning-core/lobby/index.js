@@ -18,6 +18,7 @@ import GameRoomDetailsPopup from './GameRoomDetailsPopup';
 import { actions as notificationActions } from 'lightning-notifications'
 
 import { sanitizePaymentRequest } from '../helpers';
+import CryptoJS from 'crypto-js';
 
 class Lobby extends React.Component {
   constructor(props) {
@@ -93,7 +94,8 @@ class Lobby extends React.Component {
     //     open: true,
     //   })
     //  }
-    startHost.lightning_socket.emit('BET', 'test', 100)
+
+    startHost.lightning_socket.emit('BET', this.generateMemo(100, "03c04ad48e7c80c71a65fecbaf004c5f6124224ef640fe4bdec7413aedd7746e3e", "2783yhdhu"), 100)
 
     startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
       console.log("INVOICE PAID", message);
@@ -107,6 +109,11 @@ class Lobby extends React.Component {
         amount: 100
       })
     });
+   }
+
+   generateMemo(amount, userPubKey, gameId, time = new Date()) {
+     const message = amount + userPubKey + gameId + time;
+     return CryptoJS.SHA256(message).toString(CryptoJS.enc.Hex);
    }
 
    handleChannel() {

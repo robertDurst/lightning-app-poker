@@ -31,6 +31,9 @@ class Landing extends React.Component {
   }
 
   handleConnect() {
+    this.setState({
+      loading: true,
+    })
     this.handleSuccess('03c04ad48e7c80c71a65fecbaf004c5f6124224ef640fe4bdec7413aedd7746e3e@192.241.224.112:10011', 100000)
   }
 
@@ -49,11 +52,6 @@ class Landing extends React.Component {
   closeChannel({ channelPoint, force }) {
     console.log("CLOSING", channelPoint);
     const call = this.props.onCloseChannel({ channelPoint, force })
-
-    call.on('data', (data) => {
-      console.log("SUCCESS", data)
-    })
-    call.on('error', err => console.log("ERROR", err))
   }
 
   render() {
