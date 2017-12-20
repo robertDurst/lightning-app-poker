@@ -46,6 +46,8 @@ class Table extends React.Component {
             // return <Player  name={player.pubKey} key={player.pubKey} />
           }) : <div></div>
         } */}
+        <Player name="johnson" title='King'/>
+        <Player name="Bartlet" title='President'/>
       </div>
       <div style={styles.Table_table}>
         <div style={styles.Table_table_top}>

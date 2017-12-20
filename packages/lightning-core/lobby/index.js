@@ -14,6 +14,7 @@ import startHost from '../../../apps/desktop/backend/gameHost/GameHostConnect';
 import styles from './styles.js'
 import StartHostPopup from './StartHostPopup';
 import GameRoomDetailsPopup from './GameRoomDetailsPopup';
+import { socketConnect } from '../actions/index';
 
 class Lobby extends React.Component {
   constructor(props) {
@@ -58,8 +59,9 @@ class Lobby extends React.Component {
      })
 
      window.location.hash = '/game'
-     // const socket = io(this.state.curGame.game_socket_ip)
-     // this.props.socketConnectionMade(socket);
+     const socket = io(this.state.curGame.game_socket_ip);
+     console.log(socket);
+     this.props.socketConnectionMade(socket);
    }
 
    componentDidMount() {
@@ -159,6 +161,16 @@ class Lobby extends React.Component {
 }
 
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
+    fetchAccount: accountActions.fetchAccount,
+    fetchBalances: accountActions.fetchBalances,
+    createChannel: accountActions.createChannel,
+    push: accountActions.push,
+  };
+};
+
 export default withRouter(connect(
   state => ({
     serverRunning: store.getServerRunning(state),
@@ -172,10 +184,5 @@ export default withRouter(connect(
     isTestnet: store.getTestnet(state),
     chains: store.getChains(state),
     channels: store.getChannels(state),
-  }), {
-    fetchAccount: accountActions.fetchAccount,
-    fetchBalances: accountActions.fetchBalances,
-    createChannel: accountActions.createChannel,
-    push: accountActions.push,
-  },
+  }), mapDispatchToProps,
 )(Lobby))

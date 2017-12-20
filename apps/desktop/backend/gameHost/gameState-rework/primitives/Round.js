@@ -1,7 +1,9 @@
-const roundActions = require('../utils/roundActions');
+// const roundAction = require('../utils/roundActions');
 
 module.exports = class Round {
   constructor() {
+    //States
+    this.isBetting = true
     //Highest Bet Info
     this.origin = undefined;
     this.largestBet = 0;
@@ -9,9 +11,10 @@ module.exports = class Round {
     this.active = undefined;
     //Pot
     this.pot = 0;
-
-    this.bet = gameAction.isFolded;
-    this.call = gameAction.addCardToSpread;
-    this.fold = gameAction.getPotValue;
+    //Action Count -  for round to be complete must reach order length
+    this.actionCount = 0;
+    this.minAction = undefined;
+    //Callback - for round end
+    this.callback = undefined;
   }
 }

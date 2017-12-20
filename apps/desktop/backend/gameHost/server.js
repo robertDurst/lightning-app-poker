@@ -1,7 +1,7 @@
 const http = require('http');
 const socketIO = require('socket.io');
 const SocketHandler = require('./utils/SocketHandler');
-let game = require('../gameHost/gameState/GameState');
+let game = require('./gameState-rework/state');
 
 let server;
 let io;

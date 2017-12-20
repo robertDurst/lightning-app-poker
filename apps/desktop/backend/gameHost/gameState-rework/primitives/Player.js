@@ -1,21 +1,16 @@
 
 module.exports = class Player {
   constructor(id) {
-    //Game Level
+    //Game Info
     this.id = id;
-    this.balance = 0;
-    this.socketId = 0;
-    this.displayName = 0;
+    this.balance = 100;
+    this.socketId = '';
+    this.displayName = '';
     this.gameStatus = undefined;
     this.isHost = undefined;
-    //Hand Level
+    //Hand Info
     this.hand = []
-    this.handStatus = undefined;
+    this.isFolded = undefined;
     this.isDealer = undefined;
-
-    this.isFolded = gameAction.isFolded;
-    this.addCardToSpread = gameAction.addCardToSpread;
-    this.getPotValue = gameAction.getPotValue;
-    this.incrementState = gameAction.incrementState;
   }
 }

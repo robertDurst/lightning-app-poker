@@ -30,7 +30,7 @@ async function connect(gameName, pubKey) {
     console.log("ngrok killed", data);
   });
   try {
-    ngrok.connect(10009, function (err, url) {
+    ngrok.connect(9090, function (err, url) {
       // console.log("ERROR", err ? err.details : '');
       // console.log('WORKDED', url);
       host_socket.emit('HOST_CONNECT', {
@@ -39,7 +39,7 @@ async function connect(gameName, pubKey) {
         external_ip: external_ip,
         lnd_url: pubKey+"@"+url,
         game_socket_ip: url,
-        activePlayers: game.gameState.players.length,
+        activePlayers: game.order.length,
       })
     });
   } catch(err) {
