@@ -1,12 +1,5 @@
-/* eslint-disable no-console */
+let ascii_text_generator = require('ascii-text-generator');
 
-console.log('')
-console.log(' ___       ________       ________  ________  ________    ')
-console.log('|\\  \\     |\\   ___  \\    |\\   __  \\|\\   __  \\|\\   __  \\   ')
-console.log('\\ \\  \\    \\ \\  \\\\ \\  \\   \\ \\  \\|\\  \\ \\  \\|\\  \\ \\  \\|\\  \\  ')
-console.log(' \\ \\  \\    \\ \\  \\\\ \\  \\   \\ \\   __  \\ \\   ____\\ \\   ____\\ ')
-console.log('  \\ \\  \\____\\ \\  \\\\ \\  \\   \\ \\  \\ \\  \\ \\  \\___|\\ \\  \\___| ')
-console.log('   \\ \\_______\\ \\__\\\\ \\__\\   \\ \\__\\ \\__\\ \\__\\    \\ \\__\\    ')
-console.log('    \\|_______|\\|__| \\|__|    \\|__|\\|__|\\|__|     \\|__|    ')
-console.log('')
-console.log('')
+
+let input_text = "dPoker";
+console.log(ascii_text_generator(input_text, "2"))
