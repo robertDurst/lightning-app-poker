@@ -34,6 +34,8 @@ module.exports = class Game {
     //Round Maintenance
     this.betPrecheck = roundAction.betPrecheck;
     this.bet = roundAction.bet;
+    this.callCheck = roundAction.callCheck;
+    this.callAmount = roundAction.callAmount;
     this.call = roundAction.call;
     this.fold = roundAction.fold;
     this.advanceOrder = roundAction.advanceOrder;

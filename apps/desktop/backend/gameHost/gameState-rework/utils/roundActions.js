@@ -76,6 +76,29 @@ function bet(id, cb, amount) {
   return output(null)
 
 }
+// Call check
+function callCheck(id) {
+  if (this.round.active !== id) {
+    return false
+  }
+  //Betting Round Running Check
+  if (!this.round.isBetting) {
+    return false
+  }
+  const playerBet = this.bets[this.hand.state][id];
+  const callAmount = this.largestBet - playerBet;
+  if (playerBet < this.largestBet) {
+    return true
+  }
+  return false
+}
+
+// Call AMount
+function callAmount(id) {
+  const playerBet = this.bets[this.hand.state][id];
+  const callAmount = this.largestBet - playerBet;
+  return callAmount
+}
 //Call
 //If player active call for player and change round state
 //Callback on new ID
@@ -159,6 +182,8 @@ function roundEndCheck() {
 module.exports = {
   betPrecheck,
   bet,
+  callCheck,
+  callAmount,
   call,
   fold,
   advanceOrder,
