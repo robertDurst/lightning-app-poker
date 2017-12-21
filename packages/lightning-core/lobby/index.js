@@ -97,7 +97,7 @@ class Lobby extends React.Component {
      }))
      .catch( err => console.log(err))
 
-     this.timer = setInterval(()=>{
+     this.timerPrice = setInterval(()=>{
        axios.get('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD')
        .then( x => this.setState({
          btcPrice: x.data.USD
@@ -321,7 +321,6 @@ class Lobby extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
   };
 };
 
@@ -338,7 +337,8 @@ export default withRouter(connect(
     isTestnet: store.getTestnet(state),
     chains: store.getChains(state),
     channels: store.getChannels(state),
-  }), Object.assign( {}, {
+  }),
+  dispatch => ({
     fetchAccount: accountActions.fetchAccount,
     fetchBalances: accountActions.fetchBalances,
     createChannel: accountActions.startCloseChannel,
@@ -347,6 +347,6 @@ export default withRouter(connect(
     onDecodePaymentRequest: payActions.decodePaymentRequest,
     onMakePayment: payActions.makePayment,
     onSuccess: notificationActions.addNotification,
-  }, mapDispatchToProps),
-
+    socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
+  }),
 )(Lobby))
