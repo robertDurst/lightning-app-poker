@@ -17,25 +17,30 @@ export default reactCSS({
       justifyContent: 'space-between',
       alignItems: 'center',
       borderBottom: 'solid #0288D1 1px',
-      paddingLeft: '20px'
+      paddingLeft: '20px',
+      minWidth: '1000px'
     },
     pubkey_header: {
       fontSize: '10pt',
     },
     header_left: {
       flex: 1,
+      marginRight: '25px',
     },
     header_center: {
-      flex: 1,
+      flex: 6,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     header_right: {
-      flex: 4,
+      flex: 1,
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center'
     },
     header_right_column_balance: {
-      flex: 1.25,
+      flex: 1,
       display: 'flex',
       flexDirection: 'column',
       marginLeft: '10px',
@@ -43,15 +48,15 @@ export default reactCSS({
       textAlign: 'right',
       lineHeight: 1.6,
     },
-    header_right_column_user: {
-      flex: 4,
+    header_column_user: {
+      flex: 2,
       display: 'flex',
       flexDirection: 'column',
       marginLeft: '10px',
       lineHeight: 1.6,
     },
-    header_right_row: {
-      flex: 2,
+    header_column_buttons: {
+      flex: 1,
       display: 'flex',
       flexDirection: 'row',
       marginRight: '10px',

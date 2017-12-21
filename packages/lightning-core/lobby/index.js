@@ -78,7 +78,9 @@ class Lobby extends React.Component {
      const socket = io(this.state.curGame.game_socket_ip);
 
      socket.emit('CHECK',"HEY THERE")
-     this.props.socketConnectionMade(socket);
+
+     this.state.socketConnect(socket);
+     console.log(store);
    }
 
    componentDidMount() {
@@ -88,6 +90,13 @@ class Lobby extends React.Component {
          hostedGames: x.data
        }))
        .catch( err => console.log(err))
+     }, 1000)
+
+     let nameTimer = setInterval(()=>{
+       if(this.state.username) {
+         clearInterval(nameTimer)
+         this.nameGenerator()
+       }
      }, 1000)
 
 
@@ -105,7 +114,7 @@ class Lobby extends React.Component {
        .catch( err => console.log(err))
      }, 30000)
 
-     this.nameGenerator()
+
    }
 
    componentWillUnmount() {
@@ -183,7 +192,12 @@ class Lobby extends React.Component {
    closeChannel({ channelPoint, force }) {
     const call = this.props.onCloseChannel({ channelPoint, force })
     call.on('data', () => {
+      console.log("CLOSED");
       this.props.push('/landing')
+    })
+    call.on('status', (data) => {
+      console.log("status");
+      console.log(data);
     })
     call.on('error', err => onSuccess(err.message))
    }
@@ -204,11 +218,7 @@ class Lobby extends React.Component {
         </div>
 
         <div style={styles.header_center}>
-
-        </div>
-
-        <div style={styles.header_right}>
-          <div  style={styles.header_right_row}>
+          <div  style={styles.header_column_buttons}>
             <RaisedButton
               label= {this.state.hosting ? "Disconnect" : "Host"}
               onClick={this.handleClick.bind(this)}
@@ -222,7 +232,7 @@ class Lobby extends React.Component {
               labelColor={"#ddd"}
             />
           </div>
-          <div  style={styles.header_right_column_user}>
+          <div  style={styles.header_column_user}>
             <div style={styles.header_right_text}>
               Username: <span style={styles.header_username}>{this.state.username}</span>
             </div>
@@ -230,6 +240,10 @@ class Lobby extends React.Component {
               Address: <span style={styles.header_address}>{this.props.pubkey}</span>
             </div>
           </div>
+        </div>
+
+        <div style={styles.header_right}>
+
           <div  style={styles.header_right_column_balance}>
             <div style={styles.header_right_text}>
               <img style={styles.header_logo} src="https://seeklogo.com/images/B/bitcoin-logo-DDAEEA68FA-seeklogo.com.png" />

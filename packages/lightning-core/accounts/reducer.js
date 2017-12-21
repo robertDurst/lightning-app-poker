@@ -231,7 +231,7 @@ export const actions = {
             });
             call.on('status', function(status) {
               // Process status
-              console.log("Current status: " + status);
+              console.log(status);
             });
           } else {
             dispatch(actions.connectPeer({ host, pubkey }))
