@@ -38,9 +38,10 @@ class Lobby extends React.Component {
       gameName: '',
       hostedGames: [],
       curGame: {},
-      inChannel: true,
+      btcPrice: 0,
     }
     this.timer = null;
+    this.timerPrice = null;
   }
 
    handleStartHost() {
@@ -84,10 +85,26 @@ class Lobby extends React.Component {
        .catch( err => console.log(err))
      }, 1000)
 
+
+     axios.get('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD')
+     .then( x => this.setState({
+       btcPrice: x.data.USD
+     }))
+     .catch( err => console.log(err))
+
+     this.timer = setInterval(()=>{
+       axios.get('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD')
+       .then( x => this.setState({
+         btcPrice: x.data.USD
+       }))
+       .catch( err => console.log(err))
+     }, 30000)
+
    }
 
    componentWillUnmount() {
      clearInterval(this.timer)
+     clearInterval(this.timerPrice)
    }
 
    handleClick() {
@@ -124,14 +141,7 @@ class Lobby extends React.Component {
    }
 
    handleChannel() {
-     console.log(this.props);
-     if(!(this.props.channels.length && !(this.props.channels[0].id))) {
-       this.state.inChannel ?
-         (this.setState({inChannel: false}),
-         this.closeChannel({channelPoint: this.props.channels[0].channelPoint, force: false})):
-         (this.setState({inChannel: true}),
-         this.connectToGlobalLND('03c04ad48e7c80c71a65fecbaf004c5f6124224ef640fe4bdec7413aedd7746e3e@192.241.224.112:10001', 100000));
-     }
+    this.closeChannel({channelPoint: this.props.channels[0].channelPoint, force: false})
    }
 
    async connectToGlobalLND( ip, amount, clear) {
@@ -154,7 +164,7 @@ class Lobby extends React.Component {
    closeChannel({ channelPoint, force }) {
     const call = this.props.onCloseChannel({ channelPoint, force })
     call.on('data', () => {
-      this.props.onSuccess('Channel Closed')
+      this.props.push('/landing')
     })
     call.on('error', err => onSuccess(err.message))
    }
@@ -169,7 +179,66 @@ class Lobby extends React.Component {
   render() {
     return (
     <div style={styles.container_overall}>
-        <div style={styles.container_header}>
+      <div style={styles.container_header}>
+        <div style={styles.header_left}>
+          <h1 style={styles.header_title}>dPoker</h1>
+        </div>
+
+        <div style={styles.header_center}>
+
+        </div>
+
+        <div style={styles.header_right}>
+          <div  style={styles.header_right_row}>
+            <RaisedButton
+              label= {this.state.hosting ? "Disconnect" : "Host"}
+              onClick={this.handleClick.bind(this)}
+              style={styles.host_button}
+            />
+            <RaisedButton
+              label= {this.state.inChannel ? "Withdraw" : "Reconnect"}
+              onClick={this.handleChannel.bind(this)}
+              style={styles.withdraw_button}
+              backgroundColor={"black"}
+              labelColor={"#ddd"}
+            />
+          </div>
+          <div  style={styles.header_right_column_user}>
+            <div style={styles.header_right_text}>
+              Username: <span style={styles.header_username}>{"<Insert Username here>"}</span>
+            </div>
+            <div style={styles.header_right_text}>
+              Address: <span style={styles.header_address}>{this.props.pubkey}</span>
+            </div>
+          </div>
+          <div  style={styles.header_right_column_balance}>
+            <div style={styles.header_right_text}>
+              <img style={styles.header_logo} src="https://seeklogo.com/images/B/bitcoin-logo-DDAEEA68FA-seeklogo.com.png" />
+              {
+                this.props.channels[0] ? ((this.props.channels[0].localBalance - this.props.channels[0].totalSatoshisSent)/100000000).toFixed(5) : "loading..."
+              }
+            </div>
+            <div style={styles.header_right_text}>
+              <img style={styles.header_logo} src="https://t7.rbxcdn.com/f0524f9b622c56c7a31a85a167579a42" />
+              {
+                this.props.channels[0] ? ((this.props.channels[0].localBalance - this.props.channels[0].totalSatoshisSent)/100000000 * this.state.btcPrice).toFixed(2) : "loading..."
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style={styles.container_body}>
+        <div style={styles.gamehost_table_container}>
+          <div style={styles.gamehost_table}>
+            <GameRoomTable
+              handleGameHostClick={this.handleGameHostClick.bind(this)}
+              hostedGames={this.state.hostedGames}
+            />
+          </div>
+        </div>
+      </div>
+
+        {/* <div style={styles.container_header}>
           <div style={styles.hostbutton_top}>
             <RaisedButton
               label= {this.state.hosting ? "Disconnect" : "Host"}
@@ -211,13 +280,7 @@ class Lobby extends React.Component {
               </div> : <div key={i}>Pending...</div>)
             }
           </div>
-          {/* <div className={styles.body_footer_container}>
-
-            <RaisedButton
-              label="Direct Game Connection"
-            />
-          </div> */}
-        </div>
+        </div> */}
         <div style={styles.container_footer}></div>
         <StartHostPopup
         open={this.state.open}

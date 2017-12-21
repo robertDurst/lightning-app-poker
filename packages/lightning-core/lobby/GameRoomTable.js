@@ -97,6 +97,7 @@ class Lobby extends React.Component {
      </TableHeader>
      <TableBody
        displayRowCheckbox={false}
+       style={{backgroundColor: '#0288D1', backgroundImage: 'url(background.svg)'}}
        >
         {
           this.props.hostedGames.map( (x,i) => {
