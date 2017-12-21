@@ -1,10 +1,10 @@
-import { store } from '../../../apps/desktop/index'
+import store  from '../../../apps/desktop/index'
 import { gameUpdate } from '../actions/index';
 
 export default (socket) => {
 
   socket.on('GAME_UPDATE', (game) => {
-    console.log("UPDATE RECEIVED");
+    console.log("GAME UPDATE RECEIVED");
     store.dispatch(gameUpdate(game))
   })
 

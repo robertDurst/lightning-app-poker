@@ -42,8 +42,9 @@ module.exports = class Game {
     this.buildHands = scoringAction.buildHands;
     this.getWinningID = scoringAction.getWinningID;
     //Packages
-    this.getAllPlayerInfo = gameAction.getAllPlayerInfo;
-    this.getPlayerInfo = gameAction.getPlayerInfo;
-    this.getPublicInfo = gameAction.getPublicInfo;
+    this.getPublicGame = gameAction.getPublicGame;
+    this.getPublicHand = gameAction.getPublicHand;
+    this.getPublicRound = gameAction.getPublicRound;
+    this.getPublicPlayers = gameAction.getPublicPlayers;
   }
 }

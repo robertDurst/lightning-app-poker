@@ -25,10 +25,12 @@ function nextHandState(cb) {
     this.hand.spread = this.hand.deck.cards.slice(-3);
     this.hand.deck.cards = this.hand.deck.cards.slice(0, -3);
     this.hand.state++
+    this.startRound()
   } else if (this.hand.state < 3) {
     this.hand.spread.push(...this.hand.deck.cards.slice(-1))
     this.hand.deck.cards = this.hand.deck.cards.slice(0, -1)
     this.hand.state++
+    this.startRound()
   } else {
     this.resolveHand()
   }
@@ -49,6 +51,7 @@ function resolveRound() {
   this.hand.pot += this.round.pot;
   this.round.pot = 0
   this.round.isBetting = false;
+  this.nextHandState()
 }
 
 module.exports = {
