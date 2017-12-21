@@ -152,6 +152,7 @@ class Lobby extends React.Component {
 
    closeChannel({ channelPoint, force }) {
      const call = this.props.onCloseChannel({ channelPoint, force })
+     console.log("EHHHEHHE", call);
      call.on('data', () => {
        this.props.onSuccess('Channel Closed')
      })
