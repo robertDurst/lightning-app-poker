@@ -129,6 +129,7 @@ function getPublicGame() {
     hostURL: this.hostURL,
     isActive: this.isActive,
     order: this.order,
+    bets: this.bets,
   }
   return info
 }

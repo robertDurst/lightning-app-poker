@@ -32,6 +32,7 @@ function bet(id, cb, amount) {
   if (playerBet <= this.largestBet) {
     return output('Does not exceed current largest bet')
   }
+  // TODO: LND
   //Raise Player's hand bet
   this.bets[this.hand.state][id] = playerBet
   //Raise Round's largest bet
