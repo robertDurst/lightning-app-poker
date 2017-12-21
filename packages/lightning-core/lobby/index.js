@@ -23,6 +23,10 @@ import { actions as notificationActions } from 'lightning-notifications'
 import { sanitizePaymentRequest } from '../helpers';
 import CryptoJS from 'crypto-js';
 
+import animals from 'animals';
+import adjectives from 'adjectives';
+import colors from 'color-name-list';
+
 
 class Lobby extends React.Component {
   constructor(props) {
@@ -39,6 +43,7 @@ class Lobby extends React.Component {
       hostedGames: [],
       curGame: {},
       btcPrice: 0,
+      username: 'loading...',
     }
     this.timer = null;
     this.timerPrice = null;
@@ -100,6 +105,7 @@ class Lobby extends React.Component {
        .catch( err => console.log(err))
      }, 30000)
 
+     this.nameGenerator()
    }
 
    componentWillUnmount() {
@@ -107,8 +113,19 @@ class Lobby extends React.Component {
      clearInterval(this.timerPrice)
    }
 
-   handleClick() {
+   nameGenerator() {
+     const adjective = adjectives[this.props.pubkey.substr(0,22).split("").reduce( (sum, x) => sum + x.charCodeAt(), 0) % 1133];
+     const color = colors[this.props.pubkey.substr(22,44).split("").reduce( (sum, x) => sum + x.charCodeAt(), 0) % 1671];
+     const animal = animals.words[this.props.pubkey.substr(44,66).split("").reduce( (sum, x) => sum + x.charCodeAt(), 0) % 236];
+     const name = adjective + " " + color.name + " " + animal;
+     const colorHex = color.hex;
+     this.setState({
+       username: name,
+       usernameColor: colorHex
+     })
+   }
 
+   handleClick() {
     if(this.state.hosting) {
       startHost.disconnect()
       this.setState({
@@ -119,6 +136,8 @@ class Lobby extends React.Component {
         open: true,
       })
      }
+
+
     // startHost.lightning_socket.emit('BET', 'test', 100)
     //
     // startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
@@ -196,7 +215,7 @@ class Lobby extends React.Component {
               style={styles.host_button}
             />
             <RaisedButton
-              label= {this.state.inChannel ? "Withdraw" : "Reconnect"}
+              label={"Withdraw"}
               onClick={this.handleChannel.bind(this)}
               style={styles.withdraw_button}
               backgroundColor={"black"}
@@ -205,7 +224,7 @@ class Lobby extends React.Component {
           </div>
           <div  style={styles.header_right_column_user}>
             <div style={styles.header_right_text}>
-              Username: <span style={styles.header_username}>{"<Insert Username here>"}</span>
+              Username: <span style={styles.header_username}>{this.state.username}</span>
             </div>
             <div style={styles.header_right_text}>
               Address: <span style={styles.header_address}>{this.props.pubkey}</span>
