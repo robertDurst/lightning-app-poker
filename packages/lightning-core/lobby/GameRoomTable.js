@@ -46,7 +46,13 @@ class Lobby extends React.Component {
     const first = chars.slice(0,len).reduce( (sum, x) => sum + x.charCodeAt(0), 0) % 256;
     const second = chars.slice(len, len*2).reduce( (sum, x) => sum + x.charCodeAt(0), 0) % 256;
     const third = chars.slice(len*2, len*3+1).reduce( (sum, x) => sum + x.charCodeAt(0), 0) % 256;
-    return [first, second, third]
+
+    let textColor;
+
+    if( third < 100 && second < 100 || third < 100 && second < 100 || second < 100 && first < 100) textColor = 'white';
+    else textColor = 'black';
+
+    return [first, second, third, textColor]
   }
 
   render() {
@@ -91,6 +97,7 @@ class Lobby extends React.Component {
      </TableHeader>
      <TableBody
        displayRowCheckbox={false}
+       style={{backgroundColor: '#0288D1', backgroundImage: 'url(background.svg)'}}
        >
         {
           this.props.hostedGames.map( (x,i) => {
@@ -100,7 +107,8 @@ class Lobby extends React.Component {
                 key={i}
                 style={{
                   display: 'flex',
-                  backgroundColor: 'rgb('+ c[0] +',' + c[1] +',' + c[2] +')'
+                  backgroundColor: 'rgb('+ c[0] +',' + c[1] +',' + c[2] +')',
+                  color: c[3],
                 }}
                 >
 
@@ -124,7 +132,7 @@ class Lobby extends React.Component {
                 <div className="LobbyPage__player_container">
                   {
                   this.playerContainer(x.activePlayers).map( (x,i) => {
-                    return x ? <Person key={i}/> : <Person2 key={i}/>
+                    return x ? <Person style={{color: c[3]}} key={i}/> : <Person2 style={{color: c[3]}} key={i}/>
                   })
                 }
               </div>

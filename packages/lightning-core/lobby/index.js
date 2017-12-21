@@ -23,6 +23,10 @@ import { actions as notificationActions } from 'lightning-notifications'
 import { sanitizePaymentRequest } from '../helpers';
 import CryptoJS from 'crypto-js';
 
+import animals from 'animals';
+import adjectives from 'adjectives';
+import colors from 'color-name-list';
+
 
 class Lobby extends React.Component {
   constructor(props) {
@@ -38,9 +42,11 @@ class Lobby extends React.Component {
       gameName: '',
       hostedGames: [],
       curGame: {},
-      inChannel: true,
+      btcPrice: 0,
+      username: 'loading...',
     }
     this.timer = null;
+    this.timerPrice = null;
   }
 
    handleStartHost() {
@@ -84,14 +90,42 @@ class Lobby extends React.Component {
        .catch( err => console.log(err))
      }, 1000)
 
+
+     axios.get('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD')
+     .then( x => this.setState({
+       btcPrice: x.data.USD
+     }))
+     .catch( err => console.log(err))
+
+     this.timer = setInterval(()=>{
+       axios.get('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD')
+       .then( x => this.setState({
+         btcPrice: x.data.USD
+       }))
+       .catch( err => console.log(err))
+     }, 30000)
+
+     this.nameGenerator()
    }
 
    componentWillUnmount() {
      clearInterval(this.timer)
+     clearInterval(this.timerPrice)
+   }
+
+   nameGenerator() {
+     const adjective = adjectives[this.props.pubkey.substr(0,22).split("").reduce( (sum, x) => sum + x.charCodeAt(), 0) % 1133];
+     const color = colors[this.props.pubkey.substr(22,44).split("").reduce( (sum, x) => sum + x.charCodeAt(), 0) % 1671];
+     const animal = animals.words[this.props.pubkey.substr(44,66).split("").reduce( (sum, x) => sum + x.charCodeAt(), 0) % 236];
+     const name = adjective + " " + color.name + " " + animal;
+     const colorHex = color.hex;
+     this.setState({
+       username: name,
+       usernameColor: colorHex
+     })
    }
 
    handleClick() {
-
     if(this.state.hosting) {
       startHost.disconnect()
       this.setState({
@@ -102,6 +136,8 @@ class Lobby extends React.Component {
         open: true,
       })
      }
+
+
     // startHost.lightning_socket.emit('BET', 'test', 100)
     //
     // startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
@@ -124,13 +160,7 @@ class Lobby extends React.Component {
    }
 
    handleChannel() {
-     if(!(this.props.channels.length && !(this.props.channels[0].id))) {
-       this.state.inChannel ?
-         (this.setState({inChannel: false}),
-         this.closeChannel({channelPoint: this.props.channels[0].channelPoint, force: false})):
-         (this.setState({inChannel: true}),
-         this.connectToGlobalLND('03c04ad48e7c80c71a65fecbaf004c5f6124224ef640fe4bdec7413aedd7746e3e@192.241.224.112:10011', 100000));
-     }
+    this.closeChannel({channelPoint: this.props.channels[0].channelPoint, force: false})
    }
 
    async connectToGlobalLND( ip, amount, clear) {
@@ -151,11 +181,11 @@ class Lobby extends React.Component {
    }
 
    closeChannel({ channelPoint, force }) {
-     const call = this.props.onCloseChannel({ channelPoint, force })
-     call.on('data', () => {
-       this.props.onSuccess('Channel Closed')
-     })
-     call.on('error', err => onSuccess(err.message))
+    const call = this.props.onCloseChannel({ channelPoint, force })
+    call.on('data', () => {
+      this.props.push('/landing')
+    })
+    call.on('error', err => onSuccess(err.message))
    }
 
    handleClose() {
@@ -168,7 +198,66 @@ class Lobby extends React.Component {
   render() {
     return (
     <div style={styles.container_overall}>
-        <div style={styles.container_header}>
+      <div style={styles.container_header}>
+        <div style={styles.header_left}>
+          <h1 style={styles.header_title}>dPoker</h1>
+        </div>
+
+        <div style={styles.header_center}>
+
+        </div>
+
+        <div style={styles.header_right}>
+          <div  style={styles.header_right_row}>
+            <RaisedButton
+              label= {this.state.hosting ? "Disconnect" : "Host"}
+              onClick={this.handleClick.bind(this)}
+              style={styles.host_button}
+            />
+            <RaisedButton
+              label={"Withdraw"}
+              onClick={this.handleChannel.bind(this)}
+              style={styles.withdraw_button}
+              backgroundColor={"black"}
+              labelColor={"#ddd"}
+            />
+          </div>
+          <div  style={styles.header_right_column_user}>
+            <div style={styles.header_right_text}>
+              Username: <span style={styles.header_username}>{this.state.username}</span>
+            </div>
+            <div style={styles.header_right_text}>
+              Address: <span style={styles.header_address}>{this.props.pubkey}</span>
+            </div>
+          </div>
+          <div  style={styles.header_right_column_balance}>
+            <div style={styles.header_right_text}>
+              <img style={styles.header_logo} src="https://seeklogo.com/images/B/bitcoin-logo-DDAEEA68FA-seeklogo.com.png" />
+              {
+                this.props.channels[0] ? ((this.props.channels[0].localBalance - this.props.channels[0].totalSatoshisSent)/100000000).toFixed(5) : "loading..."
+              }
+            </div>
+            <div style={styles.header_right_text}>
+              <img style={styles.header_logo} src="https://t7.rbxcdn.com/f0524f9b622c56c7a31a85a167579a42" />
+              {
+                this.props.channels[0] ? ((this.props.channels[0].localBalance - this.props.channels[0].totalSatoshisSent)/100000000 * this.state.btcPrice).toFixed(2) : "loading..."
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style={styles.container_body}>
+        <div style={styles.gamehost_table_container}>
+          <div style={styles.gamehost_table}>
+            <GameRoomTable
+              handleGameHostClick={this.handleGameHostClick.bind(this)}
+              hostedGames={this.state.hostedGames}
+            />
+          </div>
+        </div>
+      </div>
+
+        {/* <div style={styles.container_header}>
           <div style={styles.hostbutton_top}>
             <RaisedButton
               label= {this.state.hosting ? "Disconnect" : "Host"}
@@ -210,13 +299,7 @@ class Lobby extends React.Component {
               </div> : <div key={i}>Pending...</div>)
             }
           </div>
-          {/* <div className={styles.body_footer_container}>
-
-            <RaisedButton
-              label="Direct Game Connection"
-            />
-          </div> */}
-        </div>
+        </div> */}
         <div style={styles.container_footer}></div>
         <StartHostPopup
         open={this.state.open}
@@ -239,14 +322,6 @@ class Lobby extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
-    fetchAccount: accountActions.fetchAccount,
-    fetchBalances: accountActions.fetchBalances,
-    createChannel: accountActions.createChannel,
-    onCloseChannel: accountActions.startCloseChannel,
-    push: accountActions.push,
-    onDecodePaymentRequest: payActions.decodePaymentRequest,
-    onMakePayment: payActions.makePayment,
-    onSuccess: notificationActions.addNotification,
   };
 };
 
@@ -263,6 +338,15 @@ export default withRouter(connect(
     isTestnet: store.getTestnet(state),
     chains: store.getChains(state),
     channels: store.getChannels(state),
-  }), mapDispatchToProps,
+  }), Object.assign( {}, {
+    fetchAccount: accountActions.fetchAccount,
+    fetchBalances: accountActions.fetchBalances,
+    createChannel: accountActions.startCloseChannel,
+    onCloseChannel: accountActions.closeChannel,
+    push: accountActions.push,
+    onDecodePaymentRequest: payActions.decodePaymentRequest,
+    onMakePayment: payActions.makePayment,
+    onSuccess: notificationActions.addNotification,
+  }, mapDispatchToProps),
 
 )(Lobby))

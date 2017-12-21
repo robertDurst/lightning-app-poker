@@ -256,12 +256,15 @@ export const actions = {
     })
   },
   startCloseChannel: params => (dispatch) => {
+    console.log("HERE");
     dispatch({ type: START_CLOSING_CHANNEL, channelPoint: params.channelPoint })
+    console.log("SJSJSs");
     return dispatch(actions.closeChannel(params))
   },
   closeChannel: ({ channelPoint, force = false }) => {
     const txid = channelPoint.split(':')[0]
     const index = channelPoint.split(':')[1]
+    console.log("HERE", txid, index);
     return {
       [GRPC]: {
         method: 'closeChannel',

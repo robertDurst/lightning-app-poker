@@ -38,7 +38,6 @@ async function connect(gameName, pubKey) {
         internal_ip: ip.address(),
         game_name: gameName,
         external_ip: external_ip,
-        lnd_url: 'NOT REAL',
         game_socket_ip: url,
         activePlayers: game.order.length,
       })

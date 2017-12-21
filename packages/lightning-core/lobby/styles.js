@@ -3,7 +3,8 @@ import reactCSS from 'reactcss'
 export default reactCSS({
   default: {
     container_overall: {
-      backgroundColor: '#4CAF50',
+      backgroundColor: '#0288D1',
+      backgroundImage: 'url(background.svg)',
       height: '100%',
       width: '100%',
       display: 'flex',
@@ -11,14 +12,64 @@ export default reactCSS({
     },
     container_header: {
       flex: '1',
-      backgroundColor: 'blue',
+      background: "linear-gradient(to right, #E65100, #E65100)",
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: '0px 10px'
+      borderBottom: 'solid #0288D1 1px',
+      paddingLeft: '20px'
     },
     pubkey_header: {
       fontSize: '10pt',
+    },
+    header_left: {
+      flex: 1,
+    },
+    header_center: {
+      flex: 1,
+    },
+    header_right: {
+      flex: 4,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    header_right_column_balance: {
+      flex: 1.25,
+      display: 'flex',
+      flexDirection: 'column',
+      marginLeft: '10px',
+      marginRight: '10px',
+      textAlign: 'right',
+      lineHeight: 1.6,
+    },
+    header_right_column_user: {
+      flex: 4,
+      display: 'flex',
+      flexDirection: 'column',
+      marginLeft: '10px',
+      lineHeight: 1.6,
+    },
+    header_right_row: {
+      flex: 2,
+      display: 'flex',
+      flexDirection: 'row',
+      marginRight: '10px',
+    },
+    header_logo: {
+      height: '20px',
+      width: '20px',
+      marginRight: '5px'
+    },
+    header_right_text: {
+      fontSize: '16pt',
+    },
+    header_address: {
+      fontSize: '8pt',
+    },
+    header_username: {
+      fontSize: '14pt',
+      color: 'white'
     },
     username_top: {
       color: 'white',
@@ -36,9 +87,13 @@ export default reactCSS({
     },
     withdraw_button: {
       flex: '1',
+      marginBottom: '5px',
+      marginRight: '5px',
     },
     host_button: {
-      flex: '1'
+      flex: '1',
+      marginBottom: '5px',
+      marginRight: '5px',
     },
     container_body: {
       flex: '10',
@@ -46,6 +101,11 @@ export default reactCSS({
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'column'
+    },
+    header_title: {
+      fontSize: '40pt',
+      color: '#0288D1',
+      textShadow: '1px 1px black'
     },
     gamehost_table_container: {
       flex: '7',
