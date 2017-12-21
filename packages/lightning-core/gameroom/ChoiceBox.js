@@ -18,7 +18,7 @@ class ChoiceBox extends React.Component {
     super(props)
     this.packet = {
       id: this.props.pubkey,
-      socketId: this.props.socket.socketId
+      socketId: this.props.socket.id
     };
   }
 
@@ -42,9 +42,9 @@ class ChoiceBox extends React.Component {
     }
     if (this.props.socket) {
       this.props.socket.emit('READY_UP', {
-        pubkey: this.props.pubkey,
+        id: this.props.pubkey,
         displayName: 'Dr. Joe',
-        socketId: this.props.socket.socketId
+        socketId: this.props.socket.id
       })
     }
   }
@@ -69,7 +69,7 @@ class ChoiceBox extends React.Component {
       console.log("Socket disconnected");
     }
     if (this.props.socket) {
-      this.props.socket.emit('BET', Object.assign({}, packet, {amount: 20}))
+      this.props.socket.emit('BET', Object.assign({}, this.packet, {amount: 20}))
     }
   }
   handleFold() {
@@ -77,16 +77,16 @@ class ChoiceBox extends React.Component {
       console.log("Socket disconnected");
     }
     if (this.props.socket) {
-      this.props.socket.emit('FOLD', packet)
+      this.props.socket.emit('FOLD', this.packet)
     }
   }
   render() {
     return (<div style={styles.choice_box_overall}>
       ChoiceBox
-      <RaisedButton label="Log full state" onClick={() => {
+      <RaisedButton label="Log local state" onClick={() => {
           this.handleStateRead()
         }}/>
-      <RaisedButton label="Check Game state" onClick={() => {
+      <RaisedButton label="Check host game state" onClick={() => {
           this.handleCheck()
         }}/>
       <RaisedButton label="Ready up" onClick={() => {

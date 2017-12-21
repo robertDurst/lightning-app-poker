@@ -9,8 +9,9 @@ export default (socket) => {
   })
 
   socket.on('LOG', (data) => {
-    console.log('HOST LOG:',data);
+    console.log('HOST LOG:', data);
   })
+
 
   socket.on('REQUEST_ACTION', () => {
     console.log("MAKE CHOICE");

@@ -1,7 +1,7 @@
 let SocketHandler = (io, Game) => {
   let game = undefined;
-  let idHash = {};
-  let socketIdHash = {};
+  let id2sid = {};
+  let sid2id = {};
   io.on('connection', (socket) => {
     if (!game) {
       game = new Game();
@@ -17,14 +17,18 @@ let SocketHandler = (io, Game) => {
     socket.on("READY_UP", (data) => {
       if (!data) {
         data = {
-          id: 1,
+          pubkey: 1,
           displayName: "Player1",
           socketId: undefined
         }
       }
-      idHash[data.id] = data.socketId;
-      socketIdHash[data.socketIdid] = data.id;
+      id2sid[data.id] = data.socketId;
+      sid2id[data.socketId] = data.id;
       game.addPlayer(data.id, data.displayName);
+      io.emit('LOG', {
+        msg: "DATA",
+        val: data
+      })
       io.emit('LOG', "Player added: " + data.displayName + " \n PUBKEY" + data.pubkey)
     })
     socket.on('START_GAME', (data) => {
@@ -41,20 +45,23 @@ let SocketHandler = (io, Game) => {
 
     socket.on('CALL', (data) => {
       const result = game.call(data.id);
+      io.emit('LOG', result)
       if (result.success) {
         io.emit('LOG', "CALL MADE")
         sendUpdate()
       }
     })
     socket.on('BET', (data) => {
-      const result = game.call(data.id, data.amount);
+      const result = game.bet(data.id, null, data.amount);
+      io.emit('LOG', result)
       if (result.success) {
         io.emit('LOG', "BET MADE")
         sendUpdate()
       }
     })
     socket.on('FOLD', (data) => {
-      const result = game.call(data.id);
+      const result = game.fold(data.id);
+      io.emit('LOG', result)
       if (result.success) {
         io.emit('LOG', "FOLD MADE")
         sendUpdate()
@@ -70,8 +77,9 @@ let SocketHandler = (io, Game) => {
     })
   }
   function generateCustomState(sid) {
+    const id = sid2id[sid];
     return {
-      player: game.players[socketIdHash[sid]],
+      player: game.players[id] ? game.players[id] : "undefined",
       game: game.getPublicGame(),
       hand: game.getPublicHand(),
       round: game.getPublicRound(),

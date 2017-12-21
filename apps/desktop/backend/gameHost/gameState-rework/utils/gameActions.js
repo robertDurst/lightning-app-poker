@@ -36,10 +36,10 @@ function removePlayer(id) {
 //Start Hand
 //Starts new Hand with all present Players
 //Deals cards to players
-function startHand(cb) {
+function startHand(cb1, cb2) {
   this.hand = new Hand();
   this.isActive = true;
-  this.hand.callback = cb
+  this.hand.callback = cb1;
   this.bets = {};
   const dealerID = this.order[this.numGames % this.order.length];
   this.hand.dealer = dealerID;
@@ -49,7 +49,7 @@ function startHand(cb) {
     this.players[id].isFolded = false;
     this.players[id].isDealer = id === dealerID;
   })
-  this.startRound()
+  this.startRound(cb2)
   return output(null)
 }
 
@@ -99,7 +99,7 @@ function resolveHand() {
   this.bets = undefined;
   this.hand.winner = winningIDs;
   this.hand.isPlaying = false;
-  this.order.map( (id) => {
+  this.order.forEach( (id) => {
     this.players[id].hand = []
   })
   this.order = [...this.order.slice(1), ...this.order.slice(0,1)]
@@ -128,6 +128,7 @@ function getPublicGame() {
     host: this.host,
     hostURL: this.hostURL,
     isActive: this.isActive,
+    order: this.order,
   }
   return info
 }
@@ -139,6 +140,8 @@ function getPublicHand() {
     dealer: this.hand.dealer,
     pot: this.hand.pot,
     winner: this.hand.winner,
+    spread: this.hand.spread,
+    order: this.hand.order,
   }
   return info
 }

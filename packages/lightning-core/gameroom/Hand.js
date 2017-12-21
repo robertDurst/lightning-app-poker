@@ -42,7 +42,8 @@ class Hand extends React.Component {
     return (
     <div className={styles.Hand_overall}>
       {
-        this.props.gameState.game.isActive ? this.props.gameState.player.hand.map( x => {
+        this.props.gameState.game && this.props.gameState.game.isActive && this.props.gameState.player && this.props.gameState.player.hand
+        ? this.props.gameState.player.hand.map( x => {
           return <Card  card={this.cardTranslator(x.value, x.suite)} />
         }) : <div></div>
       }

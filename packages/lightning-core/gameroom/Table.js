@@ -41,23 +41,24 @@ class Table extends React.Component {
     <div style={styles.Table_overall}>
       <div style={styles.Table_player_bar}>
         PLAYERS LIST
-        {/* {
-          this.props.gameState.players ? this.props.gameState.players.map( player => {
-            // return <Player  name={player.pubKey} key={player.pubKey} />
+        {
+          this.props.gameState.game && this.props.gameState.game.isActive && this.props.gameState.players && this.props.gameState.players.length
+          ? this.props.gameState.players.map( player => {
+            return <Player  name={player.displayName} key={player.id} />
           }) : <div></div>
-        } */}
+        }
         <Player name="johnson" title='King'/>
         <Player name="Bartlet" title='President'/>
       </div>
       <div style={styles.Table_table}>
         <div style={styles.Table_table_top}>
           CARDS OF SPREAD
-          {/* {
-            this.props.gameState.spread ? this.props.gameState.spread.map( x => {
+          {
+            this.props.gameState.game && this.props.gameState.game.isActive && this.props.gameState.hand && this.props.gameState.hand.spread.length
+            ? this.props.gameState.hand.spread.map( x => {
               return <Card  card={this.cardTranslator(x.value, x.suite)} />
             }) : <div></div>
-          } */}
-          <Card card='3H'/>
+          }
         </div>
       </div>
     </div>

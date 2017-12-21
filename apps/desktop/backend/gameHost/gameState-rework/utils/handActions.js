@@ -20,7 +20,7 @@ function startRound(cb) {
 }
 //Advance State
 //Move from table set to table set
-function nextHandState(cb) {
+function nextHandState() {
   if (this.hand.state === 0) {
     this.hand.spread = this.hand.deck.cards.slice(-3);
     this.hand.deck.cards = this.hand.deck.cards.slice(0, -3);
@@ -34,9 +34,9 @@ function nextHandState(cb) {
   } else {
     this.resolveHand()
   }
-  if (cb) {
-    cb()
-  }
+  // if (cb) {
+  //   // cb()
+  // }
   return output(null)
 }
 //Resolve Betting round
@@ -52,6 +52,10 @@ function resolveRound() {
   this.round.pot = 0
   this.round.isBetting = false;
   this.nextHandState()
+}
+
+function handEndCheck() {
+  
 }
 
 module.exports = {
