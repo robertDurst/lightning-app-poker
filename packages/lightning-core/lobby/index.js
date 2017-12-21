@@ -124,12 +124,13 @@ class Lobby extends React.Component {
    }
 
    handleChannel() {
+     console.log(this.props);
      if(!(this.props.channels.length && !(this.props.channels[0].id))) {
        this.state.inChannel ?
          (this.setState({inChannel: false}),
          this.closeChannel({channelPoint: this.props.channels[0].channelPoint, force: false})):
          (this.setState({inChannel: true}),
-         this.connectToGlobalLND('03c04ad48e7c80c71a65fecbaf004c5f6124224ef640fe4bdec7413aedd7746e3e@192.241.224.112:10011', 100000));
+         this.connectToGlobalLND('03c04ad48e7c80c71a65fecbaf004c5f6124224ef640fe4bdec7413aedd7746e3e@192.241.224.112:10001', 100000));
      }
    }
 
@@ -151,12 +152,11 @@ class Lobby extends React.Component {
    }
 
    closeChannel({ channelPoint, force }) {
-     const call = this.props.onCloseChannel({ channelPoint, force })
-     console.log("EHHHEHHE", call);
-     call.on('data', () => {
-       this.props.onSuccess('Channel Closed')
-     })
-     call.on('error', err => onSuccess(err.message))
+    const call = this.props.onCloseChannel({ channelPoint, force })
+    call.on('data', () => {
+      this.props.onSuccess('Channel Closed')
+    })
+    call.on('error', err => onSuccess(err.message))
    }
 
    handleClose() {
@@ -240,14 +240,6 @@ class Lobby extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
-    fetchAccount: accountActions.fetchAccount,
-    fetchBalances: accountActions.fetchBalances,
-    createChannel: accountActions.createChannel,
-    onCloseChannel: accountActions.startCloseChannel,
-    push: accountActions.push,
-    onDecodePaymentRequest: payActions.decodePaymentRequest,
-    onMakePayment: payActions.makePayment,
-    onSuccess: notificationActions.addNotification,
   };
 };
 
@@ -264,6 +256,15 @@ export default withRouter(connect(
     isTestnet: store.getTestnet(state),
     chains: store.getChains(state),
     channels: store.getChannels(state),
-  }), mapDispatchToProps,
+  }), Object.assign( {}, {
+    fetchAccount: accountActions.fetchAccount,
+    fetchBalances: accountActions.fetchBalances,
+    createChannel: accountActions.startCloseChannel,
+    onCloseChannel: accountActions.closeChannel,
+    push: accountActions.push,
+    onDecodePaymentRequest: payActions.decodePaymentRequest,
+    onMakePayment: payActions.makePayment,
+    onSuccess: notificationActions.addNotification,
+  }, mapDispatchToProps),
 
 )(Lobby))
