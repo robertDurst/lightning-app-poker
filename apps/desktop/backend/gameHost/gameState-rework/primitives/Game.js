@@ -32,6 +32,7 @@ module.exports = class Game {
     this.startRound = handAction.startRound;
     this.resolveRound = handAction.resolveRound;
     //Round Maintenance
+    this.betPrecheck = roundAction.betPrecheck;
     this.bet = roundAction.bet;
     this.call = roundAction.call;
     this.fold = roundAction.fold;

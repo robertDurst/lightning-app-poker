@@ -3,7 +3,7 @@ module.exports = class Player {
   constructor(id) {
     //Game Info
     this.id = id;
-    this.balance = 100;
+    this.balance = 100000000;
     this.socketId = '';
     this.displayName = '';
     this.gameStatus = undefined;

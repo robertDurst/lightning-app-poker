@@ -164,10 +164,6 @@ class Lobby extends React.Component {
     // });
    }
 
-   generateMemo(amount, userPubKey, time = new Date()) {
-     const message = amount + userPubKey  + time;
-     return CryptoJS.SHA256(message).toString(CryptoJS.enc.Hex);
-   }
 
    handleChannel() {
     this.closeChannel({channelPoint: this.props.channels[0].channelPoint, force: false})

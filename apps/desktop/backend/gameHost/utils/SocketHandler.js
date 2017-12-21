@@ -1,3 +1,6 @@
+import { generateMemo, lightning_socket, betInvoice, completePayment } from './paymentProcess';
+
+
 let SocketHandler = (io, Game) => {
   let game = undefined;
   let id2sid = {};
@@ -43,6 +46,35 @@ let SocketHandler = (io, Game) => {
       sendUpdate()
     })
 
+
+
+    //TEST BET FOR LND
+    socket.on('BET', (data) => {
+      io.emit("LOG", "ID\n"+data.id)
+      const result = game.betPrecheck(data.id, data.amount);
+      if (result) {
+        const memo = generateMemo( data.amount, data.id);
+        lightning_socket.emit("BET", memo, data.amount)
+        io.emit('LOG',{
+          msg:"MEMO",
+          memo,
+        })
+        betInvoice(memo, (invoice) => {
+          socket.emit('INVOICE', invoice, data.amount)
+          completePayment(memo, () => {
+            io.emit("LOG", "FINISHED PAYMENT")
+            game.bet(data.id,() => {
+              sendUpdate()
+            },data.amount)
+          })
+        })
+      }
+    })
+
+
+
+
+
     socket.on('CALL', (data) => {
       const result = game.call(data.id);
       io.emit('LOG', result)
@@ -51,14 +83,14 @@ let SocketHandler = (io, Game) => {
         sendUpdate()
       }
     })
-    socket.on('BET', (data) => {
-      const result = game.bet(data.id, null, data.amount);
-      io.emit('LOG', result)
-      if (result.success) {
-        io.emit('LOG', "BET MADE")
-        sendUpdate()
-      }
-    })
+    // socket.on('BET', (data) => {
+    //   const result = game.bet(data.id, null, data.amount);
+    //   io.emit('LOG', result)
+    //   if (result.success) {
+    //     io.emit('LOG', "BET MADE")
+    //     sendUpdate()
+    //   }
+    // })
     socket.on('FOLD', (data) => {
       const result = game.fold(data.id);
       io.emit('LOG', result)
