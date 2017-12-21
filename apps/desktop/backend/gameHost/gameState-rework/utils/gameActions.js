@@ -3,8 +3,9 @@ const Hand = require('../primitives/Hand');
 const output = require('./output');
 //Add Player
 //Adds player to state object and order
-function addPlayer(id) {
+function addPlayer(id, name) {
   this.players[id] = new Player(id)
+  this.players[id].displayName = name;
   this.order.push(id);
   return output(null)
 }
@@ -35,10 +36,10 @@ function removePlayer(id) {
 //Start Hand
 //Starts new Hand with all present Players
 //Deals cards to players
-function startHand(cb) {
+function startHand(cb1, cb2) {
   this.hand = new Hand();
   this.isActive = true;
-  this.hand.callback = cb
+  this.hand.callback = cb1;
   this.bets = {};
   const dealerID = this.order[this.numGames % this.order.length];
   this.hand.dealer = dealerID;
@@ -48,6 +49,7 @@ function startHand(cb) {
     this.players[id].isFolded = false;
     this.players[id].isDealer = id === dealerID;
   })
+  this.startRound(cb2)
   return output(null)
 }
 
@@ -97,35 +99,60 @@ function resolveHand() {
   this.bets = undefined;
   this.hand.winner = winningIDs;
   this.hand.isPlaying = false;
-  this.order.map( (id) => {
+  this.order.forEach( (id) => {
     this.players[id].hand = []
   })
   this.order = [...this.order.slice(1), ...this.order.slice(0,1)]
 }
 //Creates array of objects to send to players
-function getAllPlayerInfo() {
+function getPublicPlayers() {
   const info = this.order.map( (id) => {
     return Object.assign({},{
       id: id,
-      name: this.players[id].displayName,
+      displayName: this.players[id].displayName,
       isFolded: this.players[id].isFolded,
+      isDealer: this.players[id].isDealer,
+      balance: this.players[id].balance,
     })
   })
   return info
 }
 //Create single player Info
-function getPlayerInfo(id) {
+function getPublicHand(id) {
   return this.players[id]
 }
-//Public Info
-function getPublicInfo() {
+//Public Game Info
+function getPublicGame() {
   const info = {
-    spread: this.hand.spread,
-    pot: this.hand.pot + this.round.pot,
-    state: this.state,
+    roomName: this.roomName,
+    host: this.host,
+    hostURL: this.hostURL,
+    isActive: this.isActive,
     order: this.order,
-    largestBet: this.round.largestBet,
+  }
+  return info
+}
+//Public Hand Info
+function getPublicHand() {
+  const info = {
+    isPlaying: this.hand.isPlaying,
+    state: this.hand.state,
+    dealer: this.hand.dealer,
+    pot: this.hand.pot,
+    winner: this.hand.winner,
+    spread: this.hand.spread,
+    order: this.hand.order,
+  }
+  return info
+}
+//Public Round Info
+function getPublicRound() {
+  const info = {
+    isBetting: this.round.isBetting,
     origin: this.round.origin,
+    largestBet: this.round.largestBet,
+    active: this.round.active,
+    pot: this.round.pot,
   }
   return info
 }
@@ -135,7 +162,8 @@ module.exports = {
   makeHost,
   startHand,
   resolveHand,
-  getAllPlayerInfo,
-  getPlayerInfo,
-  getPublicInfo,
+  getPublicPlayers,
+  getPublicRound,
+  getPublicHand,
+  getPublicGame,
 }

@@ -39,7 +39,7 @@ async function connect(gameName, pubKey) {
         game_name: gameName,
         external_ip: external_ip,
         game_socket_ip: url,
-        activePlayers: game.order.length,
+        activePlayers: 0,
       })
     });
   } catch(err) {

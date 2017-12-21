@@ -50,9 +50,9 @@ function bet(id, cb, amount) {
   const roundOver = this.roundEndCheck()
   if (roundOver) {
     this.resolveRound()
-  } else {
-    return output(null)
   }
+  return output(null)
+
 }
 //Call
 //If player active call for player and change round state
@@ -84,9 +84,8 @@ function call(id, cb) {
   const roundOver = this.roundEndCheck()
   if (roundOver) {
     this.resolveRound()
-  } else {
-    return output(null)
   }
+  return output(null)
 }
 //Fold
 //If player active fold for player and change round state
@@ -114,15 +113,15 @@ function fold(id, cb) {
   const roundOver = this.roundEndCheck();
   if (roundOver) {
     this.resolveRound()
-  } else {
-    return output(null)
   }
+  return output(null)
+
 }
 //Check if Round Over
 //To be called after every successful play to check if round is over
 //Returns true if round is over
 function roundEndCheck() {
-  const foldEndCheck = this.hand.order.length === 1
+  const foldEndCheck = this.hand.order.length < 2;
   const actionCountCheck = this.round.minAction <= this.round.actionCount;
   const playerCheck = this.round.active === this.round.origin;
   const betMap = this.hand.order.map((id) => {
