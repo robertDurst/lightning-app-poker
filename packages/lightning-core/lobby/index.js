@@ -136,36 +136,36 @@ class Lobby extends React.Component {
    }
 
    handleClick() {
-    if(this.state.hosting) {
-      startHost.disconnect()
-      this.setState({
-        hosting: false
-      })
-    } else {
-      this.setState({
-        open: true,
-      })
-     }
-
-
-    // startHost.lightning_socket.emit('BET', 'test', 100)
-    //
-    // startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
-    //   console.log("INVOICE PAID", message);
-    // })
-    //
-    //
-    // // Receive payment request invoice from Global LND
-    // startHost.lightning_socket.on('BET_INVOICE', async (pay_req) => {
-    //   this.handleSuccess({
-    //     address: pay_req,
-    //     amount: 100
+    // if(this.state.hosting) {
+    //   startHost.disconnect()
+    //   this.setState({
+    //     hosting: false
     //   })
-    // });
+    // } else {
+    //   this.setState({
+    //     open: true,
+    //   })
+    //  }
+
+
+    startHost.lightning_socket.emit('BET', this.generateMemo(1000, "03581e5038af5a03b7ce44d795f38f10d021a3aaee6e667a58677e5f69d11da5dc"), 1000)
+
+    startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
+      console.log("INVOICE PAID", message);
+    })
+
+
+    // Receive payment request invoice from Global LND
+    startHost.lightning_socket.on('BET_INVOICE', async (pay_req) => {
+      this.handleSuccess({
+        address: pay_req,
+        amount: 100
+      })
+    });
    }
 
-   generateMemo(amount, userPubKey, gameId, time = new Date()) {
-     const message = amount + userPubKey + gameId + time;
+   generateMemo(amount, userPubKey, time = new Date()) {
+     const message = amount + userPubKey  + time;
      return CryptoJS.SHA256(message).toString(CryptoJS.enc.Hex);
    }
 
@@ -183,18 +183,15 @@ class Lobby extends React.Component {
    }
 
    handleSuccess({ address, amount }) {
+     console.log(this.props);
      this.props.onMakePayment({ address, amount })
-       .then(() => {
-         this.props.fetchAccount()
-       })
-       .catch(console.error)
    }
 
    closeChannel({ channelPoint, force }) {
     const call = this.props.onCloseChannel({ channelPoint, force })
     call.on('data', () => {
       console.log("CLOSED");
-      this.props.push('/landing')
+      window.location.href = '/landing';
     })
     call.on('status', (data) => {
       console.log("status");
@@ -271,50 +268,6 @@ class Lobby extends React.Component {
           </div>
         </div>
       </div>
-
-        {/* <div style={styles.container_header}>
-          <div style={styles.hostbutton_top}>
-            <RaisedButton
-              label= {this.state.hosting ? "Disconnect" : "Host"}
-              onClick={this.handleClick.bind(this)}
-              style={styles.host_button}
-            />
-            <RaisedButton
-              label= {this.state.inChannel ? "Withdraw" : "Reconnect"}
-              onClick={this.handleChannel.bind(this)}
-              style={styles.withdraw_button}
-              backgroundColor={"black"}
-              labelColor={"#ddd"}
-            />
-          </div>
-          <h1 style={styles.username_top}> Welcome <span style={styles.pubkey_header}>{this.props.pubkey}</span></h1>
-          <p style={styles.balance_top}>Bank Account: {this.props.balances.wallet} BTC</p>
-        </div>
-        <div style={styles.container_body}>
-          <div style={styles.gamehost_table_container}>
-            <div style={styles.gamehost_table}>
-              <GameRoomTable
-                handleGameHostClick={this.handleGameHostClick.bind(this)}
-                hostedGames={this.state.hostedGames}
-              />
-            </div>
-
-          </div>
-
-          <div>
-            <h1>Connection Info</h1>
-            {
-              this.props.channels.length ?  <h3>Open Chanels</h3> : <p>No Channels Open</p>
-            }
-            {
-              this.props.channels.map( (x,i) => x.id ? <div key={i}>
-                <p>Channel id: {x.id}</p>
-                <p>Remaining Channel Balance: {x.localBalance - x.totalSatoshisSent}</p>
-                <p>Satoshis sent: {x.totalSatoshisSent}</p>
-              </div> : <div key={i}>Pending...</div>)
-            }
-          </div>
-        </div> */}
         <div style={styles.container_footer}></div>
         <StartHostPopup
         open={this.state.open}
@@ -332,7 +285,6 @@ class Lobby extends React.Component {
   )
   }
 }
-
 
 
 
@@ -354,12 +306,37 @@ export default withRouter(connect(
     fetchAccount: accountActions.fetchAccount,
     fetchBalances: accountActions.fetchBalances,
     createChannel: accountActions.startCloseChannel,
-    onCloseChannel: accountActions.closeChannel,
-    push: accountActions.push,
+    onCloseChannel: (params) => dispatch(accountActions.closeChannel(params)),
     onDecodePaymentRequest: payActions.decodePaymentRequest,
-    onMakePayment: payActions.makePayment,
+    onMakePayment: ({ address, amount }) => {
+      return new Promise((resolve, reject) => {
+        const resolveSuccess = () => {
+          dispatch(accountActions.fetchChannels())
+          dispatch(accountActions.fetchBalances())
+          dispatch(accountActions.fetchAccount())
+          resolve('Payment Sent')
+        }
+        const rejectError = (err) => {
+          reject(err.message)
+        }
+
+        const payments = dispatch(payActions.sendPayment())
+        payments.on('data', (payment) => {
+          if (payment.payment_error === '') {
+            resolveSuccess()
+          } else {
+            // TODO(roasbeef): need to switch and properly display errors
+            rejectError({ message: 'Payment route failure' })
+          }
+        })
+        payments.on('error', rejectError)
+        payments.write({ payment_request: address })
+      })
+
+    },
     onSuccess: notificationActions.addNotification,
     socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
     receiveNameUpdate: (name, color) => dispatch(nameUpdate(name, color)),
   })
+
 )(Lobby))
