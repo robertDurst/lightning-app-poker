@@ -49,7 +49,7 @@ class Landing extends React.Component {
     this.setState({
       loading: true,
     })
-    this.handleSuccess('03c04ad48e7c80c71a65fecbaf004c5f6124224ef640fe4bdec7413aedd7746e3e@192.241.224.112:10011', 1600000)
+    this.handleSuccess('035976263d35a5d1d63a118b595d60356386ec881799b7aac1c8c74fc4abeb3733@192.241.224.112:10011', 1600000)
   }
 
   async handleSuccess( ip, amount ) {
