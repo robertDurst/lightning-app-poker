@@ -31,7 +31,7 @@ export function socketDisconnect() {
 
 export function nameUpdate(name, color) {
   return {
-    type: types.SOCKET_DISCONNECT,
+    type: types.NAME_UPDATE,
     name,
     color,
   };

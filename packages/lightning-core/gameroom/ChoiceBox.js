@@ -43,7 +43,7 @@ class ChoiceBox extends React.Component {
     if (this.props.socket) {
       this.props.socket.emit('READY_UP', {
         id: this.props.pubkey,
-        displayName: 'Dr. Joe',
+        displayName: this.props.player.name,
         socketId: this.props.socket.id
       })
     }

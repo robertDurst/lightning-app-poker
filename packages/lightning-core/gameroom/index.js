@@ -38,7 +38,7 @@ class Game extends React.Component {
             <Hand gameState={this.props.gameState}/>
           </div>
           <div name='choices' style={styles.info_item}>
-            <ChoiceBox pubkey={this.props.pubkey} gameState={this.props.gameState} socket={this.props.socket} state={this.props.state}/>
+            <ChoiceBox pubkey={this.props.pubkey} gameState={this.props.gameState} socket={this.props.socket} state={this.props.state} player={this.props.player}/>
           </div>
         </div>
       </div>
@@ -61,6 +61,7 @@ const mapStateToProps = (state) => {
   return {
     gameState: state.core.game,
     socket: state.core.socket,
+    player: state.core.player,
     state: state,
     pubkey: state.core.accounts.pubkey,
   }
