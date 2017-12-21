@@ -5,7 +5,7 @@
 import * as types from './actions/types';
 import SocketHandler from './utils/SocketHandler';
 
-const socketReducer = (state = "", action) => {
+export const reducer = (state = "", action) => {
   switch (action.type) {
     case types.SOCKET_CONNECT:
       SocketHandler(action.socket)
@@ -16,5 +16,3 @@ const socketReducer = (state = "", action) => {
       return state;
   }
 };
-
-export default socketReducer;

@@ -5,7 +5,7 @@ import { reducer as pay } from './pay'
 import { reducer as request } from './request'
 import { reducer as settings } from './settings'
 import { reducer as transactions } from './transactions'
-import socket from './socketReducer'
+import { reducer as socket } from './socketReducer'
 import game from './currentGameReducer'
 
 export const reducer = combineReducers({
