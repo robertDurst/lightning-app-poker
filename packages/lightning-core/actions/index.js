@@ -27,3 +27,12 @@ export function socketDisconnect() {
     type: types.SOCKET_DISCONNECT,
   };
 }
+
+
+export function nameUpdate(name, color) {
+  return {
+    type: types.SOCKET_DISCONNECT,
+    name,
+    color,
+  };
+}

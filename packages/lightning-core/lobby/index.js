@@ -5,7 +5,7 @@ import io  from 'socket.io-client';
 import { connect } from 'react-redux';
 import { actions as accountActions } from '../accounts'
 import { actions as payActions } from '../pay'
-// import { socketConnect } from '../../actions/index';
+
 import { withRouter } from 'react-router'
 import { store } from '../../lightning-store/index.js'
 
@@ -16,7 +16,7 @@ import styles from './styles.js'
 import StartHostPopup from './StartHostPopup';
 import GameRoomDetailsPopup from './GameRoomDetailsPopup';
 
-import { socketConnect } from '../actions/index';
+import { socketConnect, nameUpdate } from '../actions/index';
 
 import { actions as notificationActions } from 'lightning-notifications'
 
@@ -79,7 +79,7 @@ class Lobby extends React.Component {
 
      socket.emit('CHECK',"HEY THERE")
 
-     this.state.socketConnect(socket);
+     this.props.socketConnectionMade(socket);
      console.log(store);
    }
 
@@ -106,7 +106,7 @@ class Lobby extends React.Component {
      }))
      .catch( err => console.log(err))
 
-     this.timer = setInterval(()=>{
+     this.timerPrice = setInterval(()=>{
        axios.get('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD')
        .then( x => this.setState({
          btcPrice: x.data.USD
@@ -123,15 +123,16 @@ class Lobby extends React.Component {
    }
 
    nameGenerator() {
-     const adjective = adjectives[this.props.pubkey.substr(0,22).split("").reduce( (sum, x) => sum + x.charCodeAt(), 0) % 1133];
-     const color = colors[this.props.pubkey.substr(22,44).split("").reduce( (sum, x) => sum + x.charCodeAt(), 0) % 1671];
-     const animal = animals.words[this.props.pubkey.substr(44,66).split("").reduce( (sum, x) => sum + x.charCodeAt(), 0) % 236];
-     const name = adjective + " " + color.name + " " + animal;
+     const adjective = adjectives[this.props.pubkey.substr(0,22).split("").reduce( (sum, x) => sum + x.charCodeAt(), 3) % 1133];
+     const color = colors[this.props.pubkey.substr(22,44).split("").reduce( (sum, x) => sum + x.charCodeAt(), 500) % 1671];
+     const animal = animals.words[this.props.pubkey.substr(44,66).split("").reduce( (sum, x) => sum + x.charCodeAt(), 200) % 236];
+     const name = adjective + " " + color.name.toLowerCase() + " " + animal;
      const colorHex = color.hex;
      this.setState({
        username: name,
        usernameColor: colorHex
      })
+     this.props.receiveNameUpdate(name, colorHex)
    }
 
    handleClick() {
@@ -333,11 +334,7 @@ class Lobby extends React.Component {
 }
 
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
-  };
-};
+
 
 export default withRouter(connect(
   state => ({
@@ -352,7 +349,8 @@ export default withRouter(connect(
     isTestnet: store.getTestnet(state),
     chains: store.getChains(state),
     channels: store.getChannels(state),
-  }), Object.assign( {}, {
+  }),
+  dispatch => ({
     fetchAccount: accountActions.fetchAccount,
     fetchBalances: accountActions.fetchBalances,
     createChannel: accountActions.startCloseChannel,
@@ -361,6 +359,7 @@ export default withRouter(connect(
     onDecodePaymentRequest: payActions.decodePaymentRequest,
     onMakePayment: payActions.makePayment,
     onSuccess: notificationActions.addNotification,
-  }, mapDispatchToProps),
-
+    socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
+    receiveNameUpdate: (name, color) => dispatch(nameUpdate(name, color)),
+  })
 )(Lobby))

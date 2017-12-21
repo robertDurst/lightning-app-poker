@@ -19,8 +19,8 @@ class Pot extends React.Component {
   render() {
     return (<div className={styles.choice_box_overall}>
       <h1>
-        Pot
-        {/* {this.props.gameState.game.isActive ? this.props.gameState.hand.pot + this.props.gameState.round.pot : 'None'} */}
+        Pot is
+        {this.props.gameState.game.isActive ? ' ' + (this.props.gameState.hand.pot + this.props.gameState.round.pot) : 'None'}
       </h1>
       </div>)
   }

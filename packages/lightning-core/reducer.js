@@ -7,6 +7,7 @@ import { reducer as settings } from './settings'
 import { reducer as transactions } from './transactions'
 import { reducer as socket } from './socketReducer'
 import game from './currentGameReducer'
+import { reducer as player } from './playerReducer'
 
 export const reducer = combineReducers({
   accounts,
@@ -16,6 +17,7 @@ export const reducer = combineReducers({
   transactions,
   socket,
   game,
+  player,
 })
 
 export { selectors } from './selectors'
