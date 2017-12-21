@@ -1,7 +1,7 @@
 const http = require('http');
 const socketIO = require('socket.io');
 const SocketHandler = require('./utils/SocketHandler');
-let game = require('./gameState-rework/state');
+let Game = require('./gameState-rework/state');
 
 let server;
 let io;
@@ -17,9 +17,9 @@ function startServer() {
       wsEngine: 'ws'
     });
 
-    SocketHandler(io, game);
+    SocketHandler(io, Game);
 
-    return game;
+    return Game;
 }
 
 function closeServer() {

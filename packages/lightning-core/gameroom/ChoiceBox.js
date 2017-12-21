@@ -9,46 +9,23 @@ const styles = reactCSS({
     choice_box_overall: {
       display: 'flex',
       flexDirection: 'column',
-      width: '100%',
+      width: '100%'
     }
   }
 })
 class ChoiceBox extends React.Component {
   constructor(props) {
     super(props)
+    this.packet = {
+      id: this.props.pubkey,
+      socketId: this.props.socket.id
+    };
   }
-  handleListStates() {
-    console.log('STATES:',this.props.state);
-    console.log(this.props);
+
+  handleStateRead() {
+    console.log("STATE:", this.props.state);
   }
-  handleStart() {
-    if (this.props.socket) {
-      this.props.socket.emit('START_GAME', this.props.gameState)
-    }
-  }
-  // handleDeal() {
-  //   this.props.socket.emit('DEAL', this.props.gameState)
-  // }
-  // handleCall() {
-  //   this.props.socket.emit('CALL', {
-  //     action: 'CALL',
-  //     socketId: this.props.gameState.socketId
-  //   })
-  // }
-  // handleBet() {
-  //   this.props.socket.emit('BET', {
-  //     action: 'BET',
-  //     socketId: this.props.gameState.socketId,
-  //     amount: 5
-  //   })
-  // }
-  // handleFold() {
-  //   this.props.socket.emit('FOLD', {
-  //     action: 'FOLD',
-  //     socketId: this.props.gameState.socketId
-  //   })
-  // }
-handleCheck() {
+  handleCheck() {
     if (this.props.socket) {
       console.log("CHECK EMITTED");
       this.props.socket.emit('CHECK', this.props.gameState)
@@ -56,21 +33,77 @@ handleCheck() {
       console.log("NO SOCKET");
     }
   }
-  // handleTest() {
-  //   this.props.socket.emit('START_BETTING', 123)
-  // }
+  handleReady() {
+    if (!this.props.socket) {
+      console.log("Socket disconnected");
+    }
+    if (!this.props.pubkey) {
+      console.log("Pubkey not available");
+    }
+    if (this.props.socket) {
+      this.props.socket.emit('READY_UP', {
+        id: this.props.pubkey,
+        displayName: 'Dr. Joe',
+        socketId: this.props.socket.id
+      })
+    }
+  }
+  handleStart() {
+    if (!this.props.socket) {
+      console.log("Socket disconnected");
+    }
+    if (this.props.socket) {
+      this.props.socket.emit('START_GAME', this.props.gameState)
+    }
+  }
+  handleCall() {
+    if (!this.props.socket) {
+      console.log("Socket disconnected");
+    }
+    if (this.props.socket) {
+      this.props.socket.emit('CALL', this.packet)
+    }
+  }
+  handleBet() {
+    if (!this.props.socket) {
+      console.log("Socket disconnected");
+    }
+    if (this.props.socket) {
+      this.props.socket.emit('BET', Object.assign({}, this.packet, {amount: 20}))
+    }
+  }
+  handleFold() {
+    if (!this.props.socket) {
+      console.log("Socket disconnected");
+    }
+    if (this.props.socket) {
+      this.props.socket.emit('FOLD', this.packet)
+    }
+  }
   render() {
-    return (
-      <div   style={styles.choice_box_overall}>
-        ChoiceBox
-        <RaisedButton label="LIST STATES" primary={true} onClick={()=>{this.handleListStates()}}/>
-        {/* <RaisedButton label="Call" primary={true}/> */}
-        {/* <RaisedButton label="Bet" primary={true} onClick={this.handleBet().bind(this)}/> */}
-        {/* <RaisedButton label="Fold" primary={true}/> */}
-        <RaisedButton label="Start Game" onClick={() => {this.handleStart()}}/>
-        {/* <RaisedButton label="Deal cards" onClick={this.handleDeal().bind(this)}/> */}
-        <RaisedButton label="Update Me" onClick={() => {this.handleCheck()}}/>
-        {/* <RaisedButton label="Start Betting Round" onClick={this.handleTest().bind(this)}/> */}
+    return (<div style={styles.choice_box_overall}>
+      ChoiceBox
+      <RaisedButton label="Log local state" onClick={() => {
+          this.handleStateRead()
+        }}/>
+      <RaisedButton label="Check host game state" onClick={() => {
+          this.handleCheck()
+        }}/>
+      <RaisedButton label="Ready up" onClick={() => {
+          this.handleReady()
+        }}/>
+      <RaisedButton label="Start Game" onClick={() => {
+          this.handleStart()
+        }}/>
+      <RaisedButton label="Call" onClick={() => {
+          this.handleCall()
+        }}/>
+      <RaisedButton label="Bet" onClick={() => {
+          this.handleBet()
+        }}/>
+      <RaisedButton label="Fold" onClick={() => {
+          this.handleFold()
+        }}/>
     </div>)
   }
 }

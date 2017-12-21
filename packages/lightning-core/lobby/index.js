@@ -335,7 +335,6 @@ class Lobby extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
   };
 };
 
@@ -352,7 +351,8 @@ export default withRouter(connect(
     isTestnet: store.getTestnet(state),
     chains: store.getChains(state),
     channels: store.getChannels(state),
-  }), Object.assign( {}, {
+  }),
+  dispatch => ({
     fetchAccount: accountActions.fetchAccount,
     fetchBalances: accountActions.fetchBalances,
     createChannel: accountActions.startCloseChannel,
@@ -361,6 +361,6 @@ export default withRouter(connect(
     onDecodePaymentRequest: payActions.decodePaymentRequest,
     onMakePayment: payActions.makePayment,
     onSuccess: notificationActions.addNotification,
+    socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
   }),
-
 )(Lobby))
