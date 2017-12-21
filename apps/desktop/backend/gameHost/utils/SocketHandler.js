@@ -7,7 +7,7 @@ let SocketHandler = (io, Game) => {
       game = new Game();
       io.emit("LOG", "GAME INITIALIZED")
     }
-
+    
     socket.on('CHECK', (data) => {
       const payload = game
         ? generateCustomState(data.sid)
