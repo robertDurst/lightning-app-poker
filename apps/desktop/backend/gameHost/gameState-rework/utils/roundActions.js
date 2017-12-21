@@ -11,6 +11,27 @@ function advanceOrder() {
   ]
   return this.hand.order[0]
 }
+// Bet Precheck
+function betPrecheck(id, amount) {
+  //Active Check
+  if (this.round.active !== id) {
+    return false
+  }
+  //Betting Round Running Check
+  if (!this.round.isBetting) {
+    return false
+  }
+  //Make sure new bet does not reduce player balance to zero or negative
+  if (this.players[id].balance - amount <= 0) {
+    return false
+  }
+  //Make sure new bet surpasses current largest bet
+  const playerBet = amount + this.bets[this.hand.state][id];
+  if (playerBet <= this.largestBet) {
+    return false
+  }
+  return true
+}
 //Bet
 //If player active make bet for player and change round state
 //Callback function on new ID
@@ -136,6 +157,7 @@ function roundEndCheck() {
 }
 
 module.exports = {
+  betPrecheck,
   bet,
   call,
   fold,

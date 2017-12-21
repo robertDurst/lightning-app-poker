@@ -42,27 +42,18 @@ export const actions = {
         dispatch(notificationActions.addNotification(err.message))
         reject(err.message)
       }
-      const paymentRequest = sanitizePaymentRequest(address)
 
-      dispatch(actions.decodePaymentRequest({ paymentRequest }))
-        .then(() => {
-          const payments = dispatch(actions.sendPayment())
-          payments.on('data', (payment) => {
-            if (payment.payment_error === '') {
-              resolveSuccess()
-            } else {
-              // TODO(roasbeef): need to switch and properly display errors
-              rejectError({ message: 'Payment route failure' })
-            }
-          })
-          payments.on('error', rejectError)
-          payments.write({ payment_request: paymentRequest })
-        })
-        .catch(() => {
-          dispatch(actions.sendCoins({ address, amount }))
-            .then(resolve)
-            .catch(rejectError)
-        })
+      const payments = dispatch(actions.sendPayment())
+      payments.on('data', (payment) => {
+        if (payment.payment_error === '') {
+          resolveSuccess()
+        } else {
+          // TODO(roasbeef): need to switch and properly display errors
+          rejectError({ message: 'Payment route failure' })
+        }
+      })
+      payments.on('error', rejectError)
+      payments.write({ payment_request: address })
     })
   },
   sendCoins: ({ address, amount }) => ({

@@ -17,8 +17,8 @@ class ChoiceBox extends React.Component {
   constructor(props) {
     super(props)
     this.packet = {
-      id: this.props.pubkey,
-      socketId: this.props.socket.id
+      id: props.state.core.accounts.pubkey,
+      socketId: props.socket.id
     };
   }
 
@@ -43,7 +43,7 @@ class ChoiceBox extends React.Component {
     if (this.props.socket) {
       this.props.socket.emit('READY_UP', {
         id: this.props.pubkey,
-        displayName: 'Dr. Joe',
+        displayName: this.props.player.name,
         socketId: this.props.socket.id
       })
     }
@@ -69,7 +69,10 @@ class ChoiceBox extends React.Component {
       console.log("Socket disconnected");
     }
     if (this.props.socket) {
-      this.props.socket.emit('BET', Object.assign({}, this.packet, {amount: 20}))
+      this.props.socket.emit('BET', {
+        id: this.props.pubkey,
+        amount: 2000,
+      })
     }
   }
   handleFold() {

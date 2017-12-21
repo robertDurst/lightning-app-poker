@@ -136,38 +136,34 @@ class Lobby extends React.Component {
    }
 
    handleClick() {
-    // if(this.state.hosting) {
-    //   startHost.disconnect()
-    //   this.setState({
-    //     hosting: false
-    //   })
-    // } else {
-    //   this.setState({
-    //     open: true,
-    //   })
-    //  }
-
-
-    startHost.lightning_socket.emit('BET', this.generateMemo(1000, "03581e5038af5a03b7ce44d795f38f10d021a3aaee6e667a58677e5f69d11da5dc"), 1000)
-
-    startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
-      console.log("INVOICE PAID", message);
-    })
-
-
-    // Receive payment request invoice from Global LND
-    startHost.lightning_socket.on('BET_INVOICE', async (pay_req) => {
-      this.handleSuccess({
-        address: pay_req,
-        amount: 100
+    if(this.state.hosting) {
+      startHost.disconnect()
+      this.setState({
+        hosting: false
       })
-    });
+    } else {
+      this.setState({
+        open: true,
+      })
+     }
+
+
+    // startHost.lightning_socket.emit('BET', this.generateMemo(1000, "03581e5038af5a03b7ce44d795f38f10d021a3aaee6e667a58677e5f69d11da5dc"), 1000)
+    //
+    // startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
+    //   console.log("INVOICE PAID", message);
+    // })
+    //
+    //
+    // // Receive payment request invoice from Global LND
+    // startHost.lightning_socket.on('BET_INVOICE', async (pay_req) => {
+    //   this.handleSuccess({
+    //     address: pay_req,
+    //     amount: 100
+    //   })
+    // });
    }
 
-   generateMemo(amount, userPubKey, time = new Date()) {
-     const message = amount + userPubKey  + time;
-     return CryptoJS.SHA256(message).toString(CryptoJS.enc.Hex);
-   }
 
    handleChannel() {
     this.closeChannel({channelPoint: this.props.channels[0].channelPoint, force: false})
