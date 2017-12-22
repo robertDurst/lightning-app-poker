@@ -172,7 +172,7 @@ const mapStateToProps = (state) => {
     player: state.core.player,
     state: state,
     pubkey: state.core.accounts.pubkey,
-    roomname: state.core.player.roomname ? state.core.player.roomname : state.core.player.roomname + '\' Game'
+    roomname: state.core.player.roomname ? state.core.player.roomname : state.core.player.name + '\' Game'
   }
 };
 

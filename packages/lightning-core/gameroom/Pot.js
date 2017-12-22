@@ -44,7 +44,7 @@ class Pot extends React.Component {
     }
 
     return (<div className={styles.choice_box_overall}>
-      <h1>
+
         <h1 style={styles.title}>Pot</h1>
         {
           <img style={styles.img} src={img_url} />
@@ -53,7 +53,6 @@ class Pot extends React.Component {
            ? ' ' + ((parseInt(this.props.gameState.hand.pot) + parseInt(this.props.gameState.round.pot))/100000000) + " BTC" : ' None'}
          </p>
 
-      </h1>
       </div>)
   }
 }
