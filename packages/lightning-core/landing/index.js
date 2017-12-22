@@ -60,7 +60,7 @@ class Landing extends React.Component {
     var resp = await this.props.createChannel({ ip, amount })
       .then(() => {
         this.props.onMakePayment({
-          address: 'lnsb14m1pdr60xgpp55rtw5qz28crq77h96uv24yf73sy9ly4p27zvwhe7rkuejry6n2yqdqqcqzyshq7r9a806ysh3j2zugql4e88wm7gacmxy2dt7d8flx424p5y0nz3l5pr73qsp7wu7majtskfg6zqjx3vsrdnagexzafayap5qw373kqpqmy0ah',
+          address: 'lnsb14m1pdr65xspp53er6vnkz7zjacya3ntrdf4cj7lwhls2jh3pnv5cygsekn53e5l0qdqqcqzys5w0m02c8vl89cuvkuvwduy98a4qu4s2cqgsp4n48pl8utuqdepj306ru8z7aj3reyfu7y9gcnerhyckxvsgekmwc2rzc7k4kepqyuzspc6w2a3',
 
           amount: 140000
         })

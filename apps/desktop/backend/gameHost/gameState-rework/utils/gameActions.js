@@ -65,14 +65,14 @@ function resolveHand() {
     case 1:
       winner1 = winningIDs[0];
       this.players[winner1].balance += this.hand.pot;
-      this.hand.pot = 0;
+      // this.hand.pot = 0;
       break;
     case 2:
       winner1 = winningIDs[0];
       winner2 = winningIDs[1];
       this.players[winner1].balance += this.hand.pot / 2;
       this.players[winner2].balance += this.hand.pot / 2;
-      this.hand.pot = 0;
+      // this.hand.pot = 0;
       break;
     case 3:
       winner1 = winningIDs[0];
@@ -81,13 +81,10 @@ function resolveHand() {
       this.players[winner1].balance += this.hand.pot / 3;
       this.players[winner2].balance += this.hand.pot / 3;
       this.players[winner3].balance += this.hand.pot / 3;
-      this.hand.pot = 0;
+      // this.hand.pot = 0;
       break;
     default:
       // TODO: If more than three winners
-  }
-  if (this.hand.handCallback) {
-    this.hand.handCallback()
   }
   const gameToStore = {
     ts: new Date(),
@@ -100,10 +97,15 @@ function resolveHand() {
   this.history.push(gameToStore)
   this.hand.winner = winningIDs;
   this.hand.isPlaying = false;
-  // this.order.forEach( (id) => {
-  //   this.players[id].hand = []
-  // })
   this.order = [...this.order.slice(1), ...this.order.slice(0,1)]
+  if (this.hand.handCallback) {
+    this.hand.handCallback()
+  }
+  this.order.forEach( (id) => {
+    this.players[id].hand = []
+  })
+  this.hand.pot = 0
+  this.hand.spread = []
 }
 //Creates array of objects to send to players
 function getPublicPlayers() {

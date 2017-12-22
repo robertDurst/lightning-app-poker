@@ -2,6 +2,8 @@ import store from '../../../apps/desktop/index'
 import {gameUpdate} from '../actions/index';
 import { actions as payActions } from '../pay'
 import { actions as accountActions } from '../accounts'
+import { generateMemo, generatePaymentRequest } from './paymentProcess'
+
 export default(socket) => {
 
   socket.on('GAME_UPDATE', (game) => {
@@ -29,6 +31,32 @@ export default(socket) => {
         console.log("err", err);
       })
     }
+  })
+
+  socket.on("YOU_WIN", async function(amount) {
+    console.log("WIN RECEIVED");
+    let state = store.getState()
+    const memo = generateMemo(amount, state.core.accounts.pubkey)
+    const bool = generatePaymentRequest(store, amount, memo)
+
+
+
+    const timer = setInterval(function () {
+      state = store.getState()
+      let paymentRequest = state.core.request.paymentRequest;
+      paymentRequest = paymentRequest.slice(12)
+      console.log("HERE", paymentRequest)
+      if(paymentRequest) {
+        clearInterval(timer);
+        const packet =  {
+          paymentRequest,
+          memo,
+        };
+        console.log("PR EMIT", packet);
+        socket.emit("GIMME_MONEY", packet)
+      }
+    }, 1000);
+
 
   })
 }
