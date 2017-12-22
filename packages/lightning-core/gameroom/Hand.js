@@ -1,6 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-// import cardTranslator from './cardTranslator.js'
+import Paper from 'material-ui/Paper';
+
 //Components
 import Card from './Card.js';
 import reactCSS from 'reactcss'
@@ -39,11 +40,12 @@ class Hand extends React.Component {
           width: '100%',
           height: '100%',
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'row',
+          margin: '10px 300px'
         },
       }})
     return (
-    <div className={styles.Hand_overall}>
+    <div style={styles.Hand_overall}>
       {
         this.props.gameState.game && this.props.gameState.game.isActive && this.props.gameState.player && this.props.gameState.player.hand
         ? this.props.gameState.player.hand.map( x => {

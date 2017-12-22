@@ -105,7 +105,7 @@ class Game extends React.Component {
             <div style={styles.container_body_your_cards}>
               <Hand gameState={this.props.gameState}/>
             </div>
-            <div style={styles.container_body_choicebox}>
+            <div name='CB container' style={styles.container_body_choicebox}>
               <ChoiceBox pubkey={this.props.pubkey} gameState={this.props.gameState} socket={this.props.socket} state={this.props.state} player={this.props.player}/>
             </div>
           </div>
