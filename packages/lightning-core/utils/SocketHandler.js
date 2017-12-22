@@ -18,15 +18,17 @@ export default(socket) => {
   })
 
   socket.on('INVOICE', (invoice, amount) => {
-    console.log(invoice);
-    onMakePayment({
-      address: invoice,
-      amount,
-    }).then( data => {
-      console.log("DATA",data);
-    }).catch( err => {
-      console.log("err", err);
-    })
+    if (invoice !== null) {
+      console.log('invoice',invoice);
+      onMakePayment({
+        address: invoice,
+        amount,
+      }).then( data => {
+        console.log("DATA",data);
+      }).catch( err => {
+        console.log("err", err);
+      })
+    }
 
   })
 }
@@ -42,7 +44,7 @@ const onMakePayment = ({address, amount}) => {
     const rejectError = (err) => {
       reject(err.message)
     }
-
+    console.log('infunc: address:',address);
     const payments = store.dispatch(payActions.sendPayment())
     payments.on('data', (payment) => {
       if (payment.payment_error === '') {

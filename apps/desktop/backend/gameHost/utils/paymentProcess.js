@@ -13,7 +13,7 @@ export function betInvoice(memo, cb) {
   lightning_socket.on('BET_INVOICE', (recievedMemo, invoice) => {
     if (recievedMemo === memo) {
       cb(invoice)
-    }
+    } 
   })
 }
 
