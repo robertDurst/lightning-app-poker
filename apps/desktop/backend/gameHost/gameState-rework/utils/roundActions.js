@@ -96,7 +96,7 @@ function callCheck(id) {
 // Call AMount
 function callAmount(id) {
   const playerBet = this.bets[this.hand.state][id];
-  const callAmount = this.round.largestBet - playerBet;
+  const callAmount =  Math.abs(playerBet - this.round.largestBet);
   return callAmount
 }
 //Call
