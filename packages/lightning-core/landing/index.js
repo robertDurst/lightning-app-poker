@@ -50,7 +50,7 @@ class Landing extends React.Component {
     this.setState({
       loading: true,
     })
-    this.handleSuccess('035976263d35a5d1d63a118b595d60356386ec881799b7aac1c8c74fc4abeb3733@192.241.224.112:10011', 1600000)
+    this.handleSuccess('027545369216650891dae90798fb737809c2a75d9fc7b35df68534aeea38a28632@192.241.224.112:10011', 1600000)
   }
 
   async handleSuccess( ip, amount ) {
@@ -60,7 +60,7 @@ class Landing extends React.Component {
     var resp = await this.props.createChannel({ ip, amount })
       .then(() => {
         this.props.onMakePayment({
-          address: 'lnsb14m1pdre90fpp5934egsvvm0w493r48yn25k9gt8wker4cxhusgczrjen68h8a50dsdqqcqzysr4wn585efameea2ygdlc5xp2k03x92pmscda0j2mcly9veare7yndx7e7j53ny7hz87ju64utzac6qhy39smsw9yzdu5kvyhahve2mgpdns7mv',
+          address: 'lnsb14m1pdr60xgpp55rtw5qz28crq77h96uv24yf73sy9ly4p27zvwhe7rkuejry6n2yqdqqcqzyshq7r9a806ysh3j2zugql4e88wm7gacmxy2dt7d8flx424p5y0nz3l5pr73qsp7wu7majtskfg6zqjx3vsrdnagexzafayap5qw373kqpqmy0ah',
           amount: 1400000
         }).then( (data) => {
           console.log("HERE", data);
