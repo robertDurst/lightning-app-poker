@@ -16,7 +16,7 @@ import styles from './styles.js'
 import StartHostPopup from './StartHostPopup';
 import GameRoomDetailsPopup from './GameRoomDetailsPopup';
 
-import { socketConnect, nameUpdate } from '../actions/index';
+import { socketConnect, nameUpdate, roomnameUpdate } from '../actions/index';
 
 import { actions as notificationActions } from 'lightning-notifications'
 
@@ -77,7 +77,8 @@ class Lobby extends React.Component {
      console.log("HOST IP",this.state.curGame.game_socket_ip)
      const socket = io(this.state.curGame.game_socket_ip);
 
-     socket.emit('CHECK',"HEY THERE")
+     this.props.roomnameUpdate(this.state.curGame.game_name)
+     console.log('rromname set to', this.state.curGame.game_name);
 
      this.props.socketConnectionMade(socket);
      console.log(store);
@@ -315,6 +316,7 @@ export default withRouter(connect(
     onSuccess: notificationActions.addNotification,
     socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
     receiveNameUpdate: (name, color) => dispatch(nameUpdate(name, color)),
+    roomnameUpdate: (name) => dispatch(roomnameUpdate(name)),
   })
 
 )(Lobby))

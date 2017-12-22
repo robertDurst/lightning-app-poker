@@ -7,6 +7,7 @@ import Pot from './Pot.js';
 import Hand from './Hand.js';
 import ChoiceBox from './ChoiceBox.js';
 import Player from './Player.js'
+import Card from './Card.js';
 
 import { RaisedButton } from 'material-ui';
 
@@ -41,8 +42,31 @@ class Game extends React.Component {
     }, 30000)
   }
 
+  cardTranslator(value, suite) {
+    let retStr = ""
+    switch(value) {
+      case 1:
+        retStr = 'A';
+        break;
+      case 11:
+        retStr = 'J';
+        break;
+      case 12:
+        retStr = 'Q';
+        break;
+      case 13:
+        retStr = 'K';
+        break;
+      default:
+        retStr = value.toString();
+    }
+
+    retStr = retStr + suite[0];
+    // console.log(retStr);
+    return retStr;
+  }
+
   render() {
-    console.log(this);
     let bet = {};
     if(this.props.gameState.game) {
       let bets = this.props.gameState.game.bets;
@@ -67,7 +91,7 @@ class Game extends React.Component {
 
           <div style={styles.header_center}>
 
-            <h1 style={styles.header_title}>{"<INSERT GAME NAME>"}</h1>
+            <h1 style={styles.header_title}>{this.props.roomname}</h1>
           </div>
 
           <div style={styles.header_right}>
@@ -99,59 +123,38 @@ class Game extends React.Component {
             }
           </div>
           <div style={styles.container_body_gamespread}>
-
+            <div style={styles.container_body_gamespread_cards}>
+              {
+                this.props.gameState.game && this.props.gameState.game.isActive && this.props.gameState.hand && this.props.gameState.hand.spread.length
+                ? this.props.gameState.hand.spread.map( x => {
+                  return <Card
+                    card={this.cardTranslator(x.value, x.suite)} />
+                }) : <div></div>
+              }
+            </div>
+            <div style={styles.container_body_gamespread_pot}>
+              <Pot gameState={this.props.gameState} />
+            </div>
           </div>
           <div style={styles.container_body_hand}>
             <div style={styles.container_body_your_cards}>
               <Hand gameState={this.props.gameState}/>
             </div>
-            <div style={styles.container_body_choicebox}>
+            <div name='CB container' style={styles.container_body_choicebox}>
               <ChoiceBox pubkey={this.props.pubkey} gameState={this.props.gameState} socket={this.props.socket} state={this.props.state} player={this.props.player}/>
             </div>
           </div>
         </div>
         <div name='footer' style={styles.container_footer}>
           <marquee style={styles.container_footer_marquee}>{
-            "TESTING, TESTING, 123..."
-            // this.props.gameState.hand ?
-            // (this.props.gameState.hand.order[0] === this.props.state.core.accounts.pubkey
-            //       ? "YOUR TURN, make a move."
-            //       : this.props.gameState.players.filter( player => player.id === this.props.gameState.hand.order[0])[0].displayName + " is playing.")
-            // : ""
+            this.props.gameState.hand ?
+            (this.props.gameState.hand.order[0] === this.props.state.core.accounts.pubkey
+                  ? "YOUR TURN, make a move."
+                  : this.props.gameState.players.filter( player => player.id === this.props.gameState.hand.order[0])[0].displayName + " is playing.")
+            : ""
           }</marquee>
         </div>
       </div>
-    // <div style={styles.container_overall}>
-      // <div name='header' style={styles.container_header}>
-      //   <div style={ styles.container_header_item } >BALANCE: {this.props.state.core.accounts.balances.channel}</div>
-      //   <Link to='/Lobby'><div style={styles.container_header_item}>Leave Game</div></Link>
-      // </div>
-    //   <div name='body' style={styles.container_body}>
-        // <div name='body-top' style={styles.container_body_top}>
-        //   <Table gameState={this.props.gameState} spread={this.props.spread} />
-        // </div>
-        // <div name='body-bottom' style={styles.container_body_bottom}>
-        //   <div name='pot' style={styles.info_item}>
-        //     <Pot gameState={this.props.gameState} />
-        //   </div>
-        //   <div name='hand' style={styles.info_item}>
-        //     <Hand gameState={this.props.gameState}/>
-        //   </div>
-        //   <div name='choices' style={styles.info_item}>
-        //     <ChoiceBox pubkey={this.props.pubkey} gameState={this.props.gameState} socket={this.props.socket} state={this.props.state} player={this.props.player}/>
-        //   </div>
-        // </div>
-    //   </div>
-    //   <div name='footer' className={styles.container_footer}>
-        // <marquee style={{color: 'white'}}>{
-        //   this.props.gameState.hand ?
-        //   (this.props.gameState.hand.order[0] === this.props.state.core.accounts.pubkey
-        //         ? "YOUR TURN, make a move."
-        //         : this.props.gameState.players.filter( player => player.id === this.props.gameState.hand.order[0])[0].displayName + " is playing.")
-        //   : ""
-        // }</marquee>
-    //   </div>
-    // </div>
   )
   }
 }
@@ -169,6 +172,7 @@ const mapStateToProps = (state) => {
     player: state.core.player,
     state: state,
     pubkey: state.core.accounts.pubkey,
+    roomname: state.core.player.roomname ? state.core.player.roomname : state.core.player.roomname + '\' Game'
   }
 };
 

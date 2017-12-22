@@ -36,3 +36,9 @@ export function nameUpdate(name, color) {
     color,
   };
 }
+export function roomnameUpdate(name) {
+  return {
+    type: types.ROOMNAME_UPDATE,
+    name,
+  };
+}

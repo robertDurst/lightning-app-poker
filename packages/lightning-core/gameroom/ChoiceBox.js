@@ -10,7 +10,9 @@ const styles = reactCSS({
       display: 'flex',
       width: '100%',
       height: '25%',
-      backgroundColor: '#0288D1'
+      backgroundColor: '#0288D1',
+      position: 'absolute',
+      top: '5px',
     },
     choice_box_card: {
       flex: 1,
@@ -107,7 +109,8 @@ class ChoiceBox extends React.Component {
     })
   }
   render() {
-    return (<div style={styles.choice_box_overall}>
+    return (
+      <div name='CB ROOT' style={styles.choice_box_overall}>
       <RaisedButton style={styles.choice_box_card} label="Ready up" onClick={() => {
           this.handleReady()
         }}/>
