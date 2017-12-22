@@ -40,7 +40,8 @@ function removePlayer(id) {
 function startHand(cb1, cb2) {
   this.hand = new Hand();
   this.isActive = true;
-  this.hand.callback = cb1;
+  this.hand.handCallback = cb1;
+  this.hand.roundCallback = cb2;
   this.bets = {};
   const dealerID = this.order[this.numGames % this.order.length];
   this.hand.dealer = dealerID;
@@ -85,7 +86,7 @@ function resolveHand() {
     default:
       // TODO: If more than three winners
   }
-  if (this.hand.callback) {
+  if (this.hand.handCallback) {
     this.hand.callback()
   }
   const gameToStore = {

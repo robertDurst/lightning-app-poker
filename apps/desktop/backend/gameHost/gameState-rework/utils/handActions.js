@@ -45,17 +45,22 @@ function resolveRound() {
   if (!this.roundEndCheck()) {
     return output('Round not over yet')
   }
-  if (this.round.callback) {
+  if (this.round.callback && this.hand.roundCallback) {
+    this.hand.roundCallback()
+  } else if (this.hand.roundCallback && !this.round.callback) {
+    this.hand.roundCallback()
+  } else if (!this.hand.roundCallback && this.round.callback) {
     this.round.callback()
   }
   this.hand.pot += this.round.pot;
   this.round.pot = 0
   this.round.isBetting = false;
-  this.round.largestBet = 0;
-  this.nextHandState()
+  this.round.largestBet = undefined;
   const handOver = this.handEndCheck();
   if (handOver) {
     this.resolveHand()
+  } else {
+    this.nextHandState()
   }
 }
 
