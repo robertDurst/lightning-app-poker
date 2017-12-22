@@ -5,6 +5,7 @@ let SocketHandler = (io, Game) => {
   let id2sid = {};
   let sid2id = {};
   io.on('connection', (socket) => {
+
     sendUpdate()
     // Check state
     socket.on('CHECK', (data) => {
@@ -44,6 +45,7 @@ let SocketHandler = (io, Game) => {
       io.emit('LOG', "Hand started")
       sendUpdate()
     })
+
 
     // BET
     socket.on('BET', (data) => {

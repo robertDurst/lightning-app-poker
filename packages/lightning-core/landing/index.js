@@ -4,6 +4,7 @@ import { RaisedButton } from 'material-ui';
 import styles from './styles.js'
 import { connect } from 'react-redux';
 import { actions as accountActions } from '../accounts'
+import { actions as payActions } from '../pay'
 import { withRouter } from 'react-router'
 
 import path from 'path';
@@ -58,6 +59,10 @@ class Landing extends React.Component {
     })
     var resp = await this.props.createChannel({ ip, amount })
       .then(() => {
+        this.props.onMakePayment({
+          address: '035976263d35a5d1d63a118b595d60356386ec881799b7aac1c8c74fc4abeb3733',
+          amount: 140000
+        })
         this.props.push('/lobby')
       })
       // eslint-disable-next-line no-console
@@ -152,5 +157,6 @@ export default withRouter(connect(
     push: accountActions.push,
     onCloseChannel: accountActions.startCloseChannel,
     onFetchChannels: accountActions.fetchChannels,
+    onMakePayment: payActions.makePayment,
   },
 )(Landing))

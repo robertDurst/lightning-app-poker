@@ -17,13 +17,11 @@ class Game extends React.Component {
   }
 
   render() {
+    console.log();
     return (
     <div style={styles.container_overall}>
       <div name='header' style={styles.container_header}>
-        <div style={ styles.container_header_item } >Game</div>
-        <div style={ styles.container_header_item } >Messages</div>
-        <div style={ styles.container_header_item } >Options</div>
-        <div style={ styles.container_header_item } >About</div>
+        <div style={ styles.container_header_item } >BALANCE: {this.props.state.core.accounts.balances.channel}</div>
         <Link to='/Lobby'><div style={styles.container_header_item}>Leave Game</div></Link>
       </div>
       <div name='body' style={styles.container_body}>
@@ -43,9 +41,14 @@ class Game extends React.Component {
         </div>
       </div>
       <div name='footer' className={styles.container_footer}>
-        FOOTER
+        <marquee style={{color: 'white'}}>{
+          this.props.gameState.hand ?
+          (this.props.gameState.hand.order[0] === this.props.state.core.accounts.pubkey
+                ? "YOUR TURN, make a move."
+                : this.props.gameState.players.filter( player => player.id === this.props.gameState.hand.order[0])[0].displayName + " is playing.")
+          : ""
+        }</marquee>
       </div>
-      //
     </div>
   )
   }
