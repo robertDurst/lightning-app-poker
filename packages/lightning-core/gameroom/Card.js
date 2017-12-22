@@ -5,7 +5,9 @@ import path from 'path';
 const styles = reactCSS({
   default: {
     Card: {
-      flex: '1'
+      width: '100%',
+      flex: '1',
+      backgroundColor: 'blue'
     }
   }
 })

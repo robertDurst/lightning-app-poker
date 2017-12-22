@@ -8,8 +8,15 @@ const styles = reactCSS({
   default: {
     choice_box_overall: {
       display: 'flex',
-      flexDirection: 'column',
-      width: '100%'
+      width: '100%',
+      height: '25%',
+      backgroundColor: '#0288D1'
+    },
+    choice_box_card: {
+      flex: 1,
+      paddingRight: '5px',
+      paddingLeft: '5px',
+      backgroundColor: '#0288D1'
     }
   }
 })
@@ -101,26 +108,19 @@ class ChoiceBox extends React.Component {
   }
   render() {
     return (<div style={styles.choice_box_overall}>
-      ChoiceBox
-      <RaisedButton label="Log local state" onClick={() => {
-          this.handleStateRead()
-        }}/>
-      <RaisedButton label="Check host game state" onClick={() => {
-          this.handleCheck()
-        }}/>
-      <RaisedButton label="Ready up" onClick={() => {
+      <RaisedButton style={styles.choice_box_card} label="Ready up" onClick={() => {
           this.handleReady()
         }}/>
-      <RaisedButton label="Start Game" onClick={() => {
+      <RaisedButton style={styles.choice_box_card} label="Start Game" onClick={() => {
           this.handleStart()
         }}/>
-      <RaisedButton label="Call" onClick={() => {
+      <RaisedButton style={styles.choice_box_card} label="Call" onClick={() => {
           this.handleCall()
         }}/>
-      <RaisedButton label="Bet" onClick={() => {
+      <RaisedButton style={styles.choice_box_card} label="Bet" onClick={() => {
           this.handleBet()
         }}/>
-      <RaisedButton label="Fold" onClick={() => {
+      <RaisedButton style={styles.choice_box_card} label="Fold" onClick={() => {
           this.handleFold()
         }}/>
       <TextField hintText="Bet Amount" onChange={(e)=>{this.handleBetChange(e)}}/><br/>
