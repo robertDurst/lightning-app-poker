@@ -31,6 +31,7 @@ module.exports = class Game {
     this.nextHandState = handAction.nextHandState;
     this.startRound = handAction.startRound;
     this.resolveRound = handAction.resolveRound;
+    this.handEndCheck = handAction.handEndCheck;
     //Round Maintenance
     this.betPrecheck = roundAction.betPrecheck;
     this.bet = roundAction.bet;

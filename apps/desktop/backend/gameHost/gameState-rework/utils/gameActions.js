@@ -3,9 +3,10 @@ const Hand = require('../primitives/Hand');
 const output = require('./output');
 //Add Player
 //Adds player to state object and order
-function addPlayer(id, name) {
+function addPlayer(id, name, balance) {
   this.players[id] = new Player(id)
   this.players[id].displayName = name;
+  this.players[id].balance = balance;
   this.order.push(id);
   return output(null)
 }

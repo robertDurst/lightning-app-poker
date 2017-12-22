@@ -47,8 +47,6 @@ class Table extends React.Component {
             return <Player  name={player.displayName} key={player.id} />
           }) : <div></div>
         }
-        <Player name="johnson" title='King'/>
-        <Player name="Bartlet" title='President'/>
       </div>
       <div style={styles.Table_table}>
         <div style={styles.Table_table_top}>
