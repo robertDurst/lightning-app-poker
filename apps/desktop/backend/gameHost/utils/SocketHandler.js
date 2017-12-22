@@ -95,7 +95,7 @@ let SocketHandler = (io, Game) => {
         result,
         round: game.round
       })
-      if (result === 1) {
+      if (result === 1 || result === 0) {
         const amount = game.callAmount(data.id)
         if (amount !== 0) {
           const memo = generateMemo(amount, data.id);

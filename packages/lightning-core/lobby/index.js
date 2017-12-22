@@ -82,6 +82,7 @@ class Lobby extends React.Component {
 
      this.props.socketConnectionMade(socket);
      // console.log(store);
+
    }
 
    componentDidMount() {
