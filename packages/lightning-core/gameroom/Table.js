@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom'
 //Components
 import Card from './Card.js'
 import Player from './Player.js'
-
 import styles from './table_styles'
 
 
@@ -37,6 +36,19 @@ class Table extends React.Component {
   }
 
   render() {
+    let bet = {};
+    if(this.props.gameState.game) {
+      let bets = this.props.gameState.game.bets;
+      Object.keys(bets).forEach( x => {
+        const betObj = bets[x];
+        Object.keys(betObj).forEach( x => {
+          if(bet.hasOwnProperty(x)) bet[x] += betObj[x];
+          else bet[x] = betObj[x];
+        })
+      })
+    }
+
+
     return (
     <div style={styles.Table_overall}>
       <div style={styles.Table_player_bar}>
@@ -44,7 +56,7 @@ class Table extends React.Component {
         {
           this.props.gameState.game && this.props.gameState.game.isActive && this.props.gameState.players && this.props.gameState.players.length
           ? this.props.gameState.players.map( player => {
-            return <Player  name={player.displayName} key={player.id} />
+            return <Player  name={player.displayName} key={player.id} currentBet={bet[player.id] ? bet[player.id] : 0}/>
           }) : <div></div>
         }
       </div>

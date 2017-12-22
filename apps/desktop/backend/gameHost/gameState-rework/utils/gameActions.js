@@ -86,6 +86,7 @@ function resolveHand() {
     default:
       // TODO: If more than three winners
   }
+
   const gameToStore = {
     ts: new Date(),
     winner: winningIDs,
@@ -97,6 +98,7 @@ function resolveHand() {
   this.history.push(gameToStore)
   this.hand.winner = winningIDs;
   this.hand.isPlaying = false;
+
   this.order = [...this.order.slice(1), ...this.order.slice(0,1)]
   if (this.hand.handCallback) {
     this.hand.handCallback()
@@ -106,6 +108,7 @@ function resolveHand() {
   })
   this.hand.pot = 0
   this.hand.spread = []
+
 }
 //Creates array of objects to send to players
 function getPublicPlayers() {
