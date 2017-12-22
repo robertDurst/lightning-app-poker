@@ -61,6 +61,7 @@ class Landing extends React.Component {
       .then(() => {
         this.props.onMakePayment({
           address: 'lnsb14m1pdr60xgpp55rtw5qz28crq77h96uv24yf73sy9ly4p27zvwhe7rkuejry6n2yqdqqcqzyshq7r9a806ysh3j2zugql4e88wm7gacmxy2dt7d8flx424p5y0nz3l5pr73qsp7wu7majtskfg6zqjx3vsrdnagexzafayap5qw373kqpqmy0ah',
+
           amount: 140000
         })
         this.props.push('/lobby')

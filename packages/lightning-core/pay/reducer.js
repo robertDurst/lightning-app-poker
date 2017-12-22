@@ -30,32 +30,41 @@ export const actions = {
     },
   }),
   makePayment: ({ address, amount }) => (dispatch) => {
-    return new Promise((resolve, reject) => {
-      const resolveSuccess = () => {
-        dispatch(notificationActions.addNotification('Payment Sent'))
-        dispatch(accountsActions.fetchChannels())
-        dispatch(accountsActions.fetchBalances())
-        dispatch(accountsActions.fetchAccount())
-        resolve('Payment Sent')
-      }
-      const rejectError = (err) => {
-        dispatch(notificationActions.addNotification(err.message))
-        reject(err.message)
-      }
+     return new Promise((resolve, reject) => {
+       const resolveSuccess = () => {
+         dispatch(notificationActions.addNotification('Payment Sent'))
+         dispatch(accountsActions.fetchChannels())
+         dispatch(accountsActions.fetchBalances())
+         dispatch(accountsActions.fetchAccount())
+         resolve('Payment Sent')
+       }
+       const rejectError = (err) => {
+         dispatch(notificationActions.addNotification(err.message))
+         reject(err.message)
+       }
+       const paymentRequest = sanitizePaymentRequest(address)
 
-      const payments = dispatch(actions.sendPayment())
-      payments.on('data', (payment) => {
-        if (payment.payment_error === '') {
-          resolveSuccess()
-        } else {
-          // TODO(roasbeef): need to switch and properly display errors
-          rejectError({ message: 'Payment route failure' })
-        }
-      })
-      payments.on('error', rejectError)
-      payments.write({ payment_request: address })
-    })
-  },
+       dispatch(actions.decodePaymentRequest({ paymentRequest }))
+         .then(() => {
+           const payments = dispatch(actions.sendPayment())
+           payments.on('data', (payment) => {
+             if (payment.payment_error === '') {
+               resolveSuccess()
+             } else {
+               // TODO(roasbeef): need to switch and properly display errors
+               rejectError({ message: 'Payment route failure' })
+             }
+           })
+           payments.on('error', rejectError)
+           payments.write({ payment_request: paymentRequest })
+         })
+         .catch(() => {
+           dispatch(actions.sendCoins({ address, amount }))
+             .then(resolve)
+             .catch(rejectError)
+         })
+     })
+   },
   sendCoins: ({ address, amount }) => ({
     [GRPC]: {
       method: 'sendCoins',
