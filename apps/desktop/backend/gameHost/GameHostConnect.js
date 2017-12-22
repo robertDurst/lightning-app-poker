@@ -32,8 +32,8 @@ async function connect(gameName, pubKey) {
   });
   try {
     ngrok.connect(9090, function (err, url) {
-      // console.log("ERROR", err ? err.details : '');
-      // console.log('WORKDED', url);
+      console.log("ERROR", err ? err.details : '');
+      console.log('WORKDED', url);
       host_socket.emit('HOST_CONNECT', {
         internal_ip: ip.address(),
         game_name: gameName,

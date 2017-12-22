@@ -146,22 +146,6 @@ class Lobby extends React.Component {
         open: true,
       })
      }
-
-
-    // startHost.lightning_socket.emit('BET', this.generateMemo(1000, "03581e5038af5a03b7ce44d795f38f10d021a3aaee6e667a58677e5f69d11da5dc"), 1000)
-    //
-    // startHost.lightning_socket.on('PAID_INVOICE', async (message) => {
-    //   console.log("INVOICE PAID", message);
-    // })
-    //
-    //
-    // // Receive payment request invoice from Global LND
-    // startHost.lightning_socket.on('BET_INVOICE', async (pay_req) => {
-    //   this.handleSuccess({
-    //     address: pay_req,
-    //     amount: 100
-    //   })
-    // });
    }
 
 
@@ -242,13 +226,13 @@ class Lobby extends React.Component {
             <div style={styles.header_right_text}>
               <img style={styles.header_logo} src="https://seeklogo.com/images/B/bitcoin-logo-DDAEEA68FA-seeklogo.com.png" />
               {
-                this.props.channels[0] ? ((this.props.channels[0].localBalance - this.props.channels[0].totalSatoshisSent)/100000000).toFixed(5) : "loading..."
+                this.props.channels[0] ? ((this.props.channels[0].localBalance)/100000000).toFixed(5) : "loading..."
               }
             </div>
             <div style={styles.header_right_text}>
               <img style={styles.header_logo} src="https://t7.rbxcdn.com/f0524f9b622c56c7a31a85a167579a42" />
               {
-                this.props.channels[0] ? ((this.props.channels[0].localBalance - this.props.channels[0].totalSatoshisSent)/100000000 * this.state.btcPrice).toFixed(2) : "loading..."
+                this.props.channels[0] ? ((this.props.channels[0].localBalance)/100000000 * this.state.btcPrice).toFixed(2) : "loading..."
               }
             </div>
           </div>

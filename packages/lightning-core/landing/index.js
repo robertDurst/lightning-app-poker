@@ -60,10 +60,13 @@ class Landing extends React.Component {
     var resp = await this.props.createChannel({ ip, amount })
       .then(() => {
         this.props.onMakePayment({
-          address: '035976263d35a5d1d63a118b595d60356386ec881799b7aac1c8c74fc4abeb3733',
-          amount: 140000
-        })
-        this.props.push('/lobby')
+          address: 'lnsb14m1pdre90fpp5934egsvvm0w493r48yn25k9gt8wker4cxhusgczrjen68h8a50dsdqqcqzysr4wn585efameea2ygdlc5xp2k03x92pmscda0j2mcly9veare7yndx7e7j53ny7hz87ju64utzac6qhy39smsw9yzdu5kvyhahve2mgpdns7mv',
+          amount: 1400000
+        }).then( (data) => {
+          console.log("HERE", data);
+          this.props.push('/lobby')
+        }).catch( (err) => console.log(err))
+
       })
       // eslint-disable-next-line no-console
       .catch('HERE',console.error)
