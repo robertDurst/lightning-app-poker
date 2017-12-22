@@ -21,18 +21,26 @@ let SocketHandler = (io, Game) => {
 
     // Add oneself to Game state
     socket.on("READY_UP", (data) => {
+      socket.emit('LOG', 'ready recieved')
       if (!game) {
         game = new Game();
         io.emit("LOG", "GAME INITIALIZED")
       }
+      socket.emit('LOG', 'game if passed')
       id2sid[data.id] = data.socketId;
+      socket.emit('LOG', 'hash1  passed')
       sid2id[data.socketId] = data.id;
+      io.emit('LOG', {
+        msg: "DATA",
+        val: data
+      })
       game.addPlayer(data.id, data.displayName, data.balance);
       io.emit('LOG', {
         msg: "DATA",
         val: data
       })
       io.emit('LOG', "Player added: " + data.displayName + " \n PUBKEY" + data.id)
+      sendUpdate()
     })
     socket.on('START_GAME', (data) => {
       game.startHand(() => {
@@ -124,7 +132,7 @@ let SocketHandler = (io, Game) => {
     })
     socket.on('GIMME_MONEY', ({paymentRequest, memo}) => {
       completePaymentRequest(paymentRequest, () => {
-        
+
       })
     })
   });

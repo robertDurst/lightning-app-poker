@@ -21,7 +21,7 @@ class Pot extends React.Component {
       <h1>
         Pot is
         {this.props.gameState.game && this.props.gameState.game.isActive
-           ? ' ' + (this.props.gameState.hand.pot + this.props.gameState.round.pot) : ' None'}
+           ? ' ' + (parseInt(this.props.gameState.hand.pot) + parseInt(this.props.gameState.round.pot)) : ' None'}
       </h1>
       </div>)
   }

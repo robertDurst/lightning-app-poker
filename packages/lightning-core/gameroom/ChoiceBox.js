@@ -1,7 +1,7 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 //Components
-import RaisedButton from 'material-ui/RaisedButton';
+import { RaisedButton, TextField } from 'material-ui';
 import reactCSS from 'reactcss'
 
 const styles = reactCSS({
@@ -16,14 +16,24 @@ const styles = reactCSS({
 class ChoiceBox extends React.Component {
   constructor(props) {
     super(props)
-    this.packet = {
-      id: props.state.core.accounts.pubkey,
-      socketId: props.socket.id
-    };
+    this.state = {
+      betAmount: 0
+    }
   }
-
+  makePacket(key,val) {
+    const packet = {
+      id: this.props.pubkey,
+      sid: this.props.socket.id
+    }
+    if (key && val) {
+      packet[key] = val;
+    }
+    return packet
+  }
   handleStateRead() {
     console.log("STATE:", this.props.state);
+    const packet = this.makePacket();
+    console.log(packet);
   }
   handleCheck() {
     if (this.props.socket) {
@@ -57,7 +67,7 @@ class ChoiceBox extends React.Component {
       console.log("Socket disconnected");
     }
     if (this.props.socket) {
-      this.props.socket.emit('START_GAME', this.props.gameState)
+      this.props.socket.emit('START_GAME', this.makePacket())
     }
   }
   handleCall() {
@@ -65,7 +75,7 @@ class ChoiceBox extends React.Component {
       console.log("Socket disconnected");
     }
     if (this.props.socket) {
-      this.props.socket.emit('CALL', this.packet)
+      this.props.socket.emit('CALL', this.makePacket())
     }
   }
   handleBet() {
@@ -73,10 +83,7 @@ class ChoiceBox extends React.Component {
       console.log("Socket disconnected");
     }
     if (this.props.socket) {
-      this.props.socket.emit('BET', {
-        id: this.props.pubkey,
-        amount: 2000
-      })
+      this.props.socket.emit('BET',this.makePacket('amount',this.state.betAmount))
     }
   }
   handleFold() {
@@ -84,8 +91,13 @@ class ChoiceBox extends React.Component {
       console.log("Socket disconnected");
     }
     if (this.props.socket) {
-      this.props.socket.emit('FOLD', this.packet)
+      this.props.socket.emit('FOLD', this.makePacket())
     }
+  }
+  handleBetChange(e) {
+    this.setState({
+      betAmount: parseInt(e.target.value)
+    })
   }
   render() {
     return (<div style={styles.choice_box_overall}>
@@ -111,6 +123,7 @@ class ChoiceBox extends React.Component {
       <RaisedButton label="Fold" onClick={() => {
           this.handleFold()
         }}/>
+      <TextField hintText="Bet Amount" onChange={(e)=>{this.handleBetChange(e)}}/><br/>
     </div>)
   }
 }
