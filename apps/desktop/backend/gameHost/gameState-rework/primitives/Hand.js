@@ -15,6 +15,7 @@ module.exports = class Hand {
     this.deck = new Deck();
     this.spread = [];
     //Callback fn
-    this.callback = undefined
+    this.handCallback = undefined
+    this.roundCallback = undefined
   }
 }

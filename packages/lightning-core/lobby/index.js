@@ -242,13 +242,13 @@ class Lobby extends React.Component {
             <div style={styles.header_right_text}>
               <img style={styles.header_logo} src="https://seeklogo.com/images/B/bitcoin-logo-DDAEEA68FA-seeklogo.com.png" />
               {
-                this.props.channels[0] ? ((this.props.channels[0].localBalance - this.props.channels[0].totalSatoshisSent)/100000000).toFixed(5) : "loading..."
+                this.props.channels[0] ? ((this.props.channels[0].localBalance)/100000000).toFixed(5) : "loading..."
               }
             </div>
             <div style={styles.header_right_text}>
               <img style={styles.header_logo} src="https://t7.rbxcdn.com/f0524f9b622c56c7a31a85a167579a42" />
               {
-                this.props.channels[0] ? ((this.props.channels[0].localBalance - this.props.channels[0].totalSatoshisSent)/100000000 * this.state.btcPrice).toFixed(2) : "loading..."
+                this.props.channels[0] ? ((this.props.channels[0].localBalance )/100000000 * this.state.btcPrice).toFixed(2) : "loading..."
               }
             </div>
           </div>
