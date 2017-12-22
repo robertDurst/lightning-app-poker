@@ -113,8 +113,6 @@ class Lobby extends React.Component {
        }))
        .catch( err => console.log(err))
      }, 30000)
-
-
    }
 
    componentWillUnmount() {
