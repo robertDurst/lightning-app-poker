@@ -67,7 +67,7 @@ class Game extends React.Component {
 
           <div style={styles.header_center}>
 
-            <h1 style={styles.header_title}>{"<INSERT GAME NAME>"}</h1>
+            <h1 style={styles.header_title}>{this.props.roomname}</h1>
           </div>
 
           <div style={styles.header_right}>
@@ -169,6 +169,7 @@ const mapStateToProps = (state) => {
     player: state.core.player,
     state: state,
     pubkey: state.core.accounts.pubkey,
+    roomname: state.core.player.roomname ? state.core.player.roomname : state.core.player.roomname + '\' Game'
   }
 };
 
