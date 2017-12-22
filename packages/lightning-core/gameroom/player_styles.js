@@ -3,7 +3,7 @@ import reactCSS from 'reactcss'
 export default reactCSS({
   default: {
     Player: {
-      width: '300px',
+      width: '400px',
       margin: '10px',
       display: 'flex',
     },

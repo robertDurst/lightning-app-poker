@@ -91,7 +91,7 @@ class ChoiceBox extends React.Component {
     if (!this.props.socket) {
       console.log("Socket disconnected");
     }
-    if (this.props.socket) {
+    if (this.props.socket && this.state.betAmount > 0) {
       this.props.socket.emit('BET',this.makePacket('amount',this.state.betAmount))
     }
   }

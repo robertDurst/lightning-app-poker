@@ -15,20 +15,20 @@ function advanceOrder() {
 function betPrecheck(id, amount) {
   //Active Check
   if (this.round.active !== id) {
-    return -3
+    return 'not up to plays'
   }
   //Betting Round Running Check
   if (!this.round.isBetting) {
-    return -2
+    return 'not active round'
   }
   //Make sure new bet does not reduce player balance to zero or negative
   if (this.players[id].balance - amount <= 0) {
-    return -1
+    return 'not enough balance'
   }
   //Make sure new bet surpasses current largest bet
   const playerBet = amount + this.bets[this.hand.state][id];
-  if (playerBet <= this.round.largestBet) {
-    return playerBet
+  if (playerBet < this.round.largestBet) {
+    return 'not enough'
   }
   return 1
 }
@@ -79,11 +79,11 @@ function bet(id, cb, amount) {
 // Call check
 function callCheck(id) {
   if (this.round.active !== id) {
-    return -2
+    return 'not active round'
   }
   //Betting Round Running Check
   if (!this.round.isBetting) {
-    return -1
+    return 'not active player'
   }
   const playerBet = this.bets[this.hand.state][id];
   const callAmount = this.largestBet - playerBet;
