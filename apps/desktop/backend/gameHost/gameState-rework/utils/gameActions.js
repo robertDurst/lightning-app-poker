@@ -87,7 +87,7 @@ function resolveHand() {
       // TODO: If more than three winners
   }
   if (this.hand.handCallback) {
-    this.hand.callback()
+    this.hand.handCallback()
   }
   const gameToStore = {
     ts: new Date(),
@@ -98,12 +98,11 @@ function resolveHand() {
     dealer: this.hand.dealer
   }
   this.history.push(gameToStore)
-  this.bets = undefined;
   this.hand.winner = winningIDs;
   this.hand.isPlaying = false;
-  this.order.forEach( (id) => {
-    this.players[id].hand = []
-  })
+  // this.order.forEach( (id) => {
+  //   this.players[id].hand = []
+  // })
   this.order = [...this.order.slice(1), ...this.order.slice(0,1)]
 }
 //Creates array of objects to send to players
