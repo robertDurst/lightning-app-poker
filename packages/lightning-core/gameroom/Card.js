@@ -7,7 +7,8 @@ const styles = reactCSS({
     Card: {
       width: '100%',
       flex: '1',
-      backgroundColor: 'blue'
+      display: 'flex',
+      justifyContent: 'center',
     }
   }
 })
@@ -27,11 +28,11 @@ class Card extends React.Component {
     const { index, card, size, faceDown, rotationY } = this.props;
 
     return (
-      <div id="card" className={styles.Card}>
+      <div id="card" style={styles.Card}>
         <img
           className={faceDown === true ? "back" : "front"}
           src={`cards/${card}.svg`}
-          style={{ width: "100px", height: "auto" }}
+          style={{ width: "150px", height: "160px" }}
         />
       </div>
     );

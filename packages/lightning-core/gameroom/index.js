@@ -91,7 +91,7 @@ class Game extends React.Component {
 
           <div style={styles.header_center}>
 
-            <h1 style={styles.header_title}>{"<INSERT GAME NAME>"}</h1>
+            <h1 style={styles.header_title}>{this.props.roomname}</h1>
           </div>
 
           <div style={styles.header_right}>
@@ -140,7 +140,7 @@ class Game extends React.Component {
             <div style={styles.container_body_your_cards}>
               <Hand gameState={this.props.gameState}/>
             </div>
-            <div style={styles.container_body_choicebox}>
+            <div name='CB container' style={styles.container_body_choicebox}>
               <ChoiceBox pubkey={this.props.pubkey} gameState={this.props.gameState} socket={this.props.socket} state={this.props.state} player={this.props.player}/>
             </div>
           </div>
@@ -172,6 +172,7 @@ const mapStateToProps = (state) => {
     player: state.core.player,
     state: state,
     pubkey: state.core.accounts.pubkey,
+    roomname: state.core.player.roomname ? state.core.player.roomname : state.core.player.roomname + '\' Game'
   }
 };
 

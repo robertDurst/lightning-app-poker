@@ -7,7 +7,9 @@ import * as types from './actions/types';
 export const reducer = (state = {}, action) => {
   switch (action.type) {
     case types.NAME_UPDATE:
-      return Object.assign({}, { name: action.name, color: action.color })
+      return Object.assign({}, { name: action.name, color: action.color }, state)
+    case types.ROOMNAME_UPDATE:
+      return Object.assign({}, { roomname: action.name }, state)
     default:
       return state;
   }
