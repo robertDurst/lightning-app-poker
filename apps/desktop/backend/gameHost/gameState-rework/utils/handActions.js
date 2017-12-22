@@ -51,15 +51,24 @@ function resolveRound() {
   this.hand.pot += this.round.pot;
   this.round.pot = 0
   this.round.isBetting = false;
+  this.round.largestBet = 0;
   this.nextHandState()
+  const handOver = this.handEndCheck();
+  if (handOver) {
+    this.resolveHand()
+  }
 }
 
 function handEndCheck() {
-  
+  const playerCheck = this.hand.order < 2;
+  const stateCheck = this.hand.state === 3;
+  const roundCheck = this.round.isBetting;
+  return playerCheck || (stateCheck && roundCheck)
 }
 
 module.exports = {
   nextHandState,
   startRound,
   resolveRound,
+  handEndCheck
 }

@@ -5,33 +5,34 @@ let SocketHandler = (io, Game) => {
   let id2sid = {};
   let sid2id = {};
   io.on('connection', (socket) => {
-    if (!game) {
-      game = new Game();
-      io.emit("LOG", "GAME INITIALIZED")
-    }
 
+    sendUpdate()
+    // Check state
     socket.on('CHECK', (data) => {
+      if (!game) {
+        game = new Game();
+        io.emit("LOG", "GAME INITIALIZED")
+      }
       const payload = game
         ? generateCustomState(data.sid)
         : 'game undefined';
       io.emit('LOG', payload)
     })
+
+    // Add oneself to Game state
     socket.on("READY_UP", (data) => {
-      if (!data) {
-        data = {
-          pubkey: 1,
-          displayName: "Player1",
-          socketId: undefined
-        }
+      if (!game) {
+        game = new Game();
+        io.emit("LOG", "GAME INITIALIZED")
       }
       id2sid[data.id] = data.socketId;
       sid2id[data.socketId] = data.id;
-      game.addPlayer(data.id, data.displayName);
+      game.addPlayer(data.id, data.displayName, data.balance);
       io.emit('LOG', {
         msg: "DATA",
         val: data
       })
-      io.emit('LOG', "Player added: " + data.displayName + " \n PUBKEY" + data.pubkey)
+      io.emit('LOG', "Player added: " + data.displayName + " \n PUBKEY" + data.id)
     })
     socket.on('START_GAME', (data) => {
       game.startHand(() => {
@@ -39,17 +40,24 @@ let SocketHandler = (io, Game) => {
         io.emit('LOG', "Hand is over")
       }, () => {
         // TODO: CALLBACK FOR END OF ROUND 1
-        io.emit('LOG', "Round 1 is over")
+        io.emit('LOG', "Round over: "+game.hand.state)
       })
       io.emit('LOG', "Hand started")
       sendUpdate()
     })
 
-    //TEST BET FOR LND
+
+    // BET
     socket.on('BET', (data) => {
-      io.emit("LOG", "ID\n" + data.id)
+      // io.emit("LOG", "ID\n" + data.id)
+      io.emit("LOG", {
+        msg: "DATA",
+        data,
+      })
+
       const result = game.betPrecheck(data.id, data.amount);
-      if (result) {
+
+      if (result === 1) {
         const memo = generateMemo(data.amount, data.id);
         lightning_socket.emit("BET", memo, data.amount)
         io.emit('LOG', {
@@ -61,13 +69,21 @@ let SocketHandler = (io, Game) => {
           completePayment(memo, () => {
             io.emit("LOG", "FINISHED PAYMENT")
             game.bet(data.id, () => {
-              sendUpdate()
             }, data.amount)
+            sendUpdate()
           })
         })
+      } else {
+        socket.emit('LOG', {
+          result,
+          msg: 'failed bet',
+          round: game.round,
+        })
       }
+
     })
 
+    // CALL
     socket.on('CALL', (data) => {
       const result = game.callCheck(data.id);
       if (result) {
@@ -83,28 +99,14 @@ let SocketHandler = (io, Game) => {
           completePayment(memo, () => {
             io.emit("LOG", "FINISHED PAYMENT")
             game.call(data.id, () => {
-              sendUpdate()
             }, amount)
+            sendUpdate()
           })
         })
       }
     })
-    // socket.on('CALL', (data) => {
-    //   const result = game.call(data.id);
-    //   io.emit('LOG', result)
-    //   if (result.success) {
-    //     io.emit('LOG', "CALL MADE")
-    //     sendUpdate()
-    //   }
-    // })
-    // socket.on('BET', (data) => {
-    //   const result = game.bet(data.id, null, data.amount);
-    //   io.emit('LOG', result)
-    //   if (result.success) {
-    //     io.emit('LOG', "BET MADE")
-    //     sendUpdate()
-    //   }
-    // })
+
+    // FOLD
     socket.on('FOLD', (data) => {
       const result = game.fold(data.id);
       io.emit('LOG', result)
@@ -124,7 +126,7 @@ let SocketHandler = (io, Game) => {
   }
   function generateCustomState(sid) {
     const id = sid2id[sid];
-    return {
+    return game ? {
       player: game.players[id]
         ? game.players[id]
         : "undefined",
@@ -133,7 +135,7 @@ let SocketHandler = (io, Game) => {
       round: game.getPublicRound(),
       players: game.getPublicPlayers(),
       full_game: game
-    }
+    } : sid
   }
   function testServer(socket) {
     Object.keys(io.sockets.sockets).forEach(id => {

@@ -28,7 +28,10 @@ class ChoiceBox extends React.Component {
   handleCheck() {
     if (this.props.socket) {
       console.log("CHECK EMITTED");
-      this.props.socket.emit('CHECK', this.props.gameState)
+      this.props.socket.emit('CHECK', {
+        id: this.props.pubkey,
+        sid: this.props.socket.id
+      })
     } else {
       console.log("NO SOCKET");
     }
@@ -44,7 +47,8 @@ class ChoiceBox extends React.Component {
       this.props.socket.emit('READY_UP', {
         id: this.props.pubkey,
         displayName: this.props.player.name,
-        socketId: this.props.socket.id
+        socketId: this.props.socket.id,
+        balance: this.props.state.core.accounts.balances.channel
       })
     }
   }
@@ -71,7 +75,7 @@ class ChoiceBox extends React.Component {
     if (this.props.socket) {
       this.props.socket.emit('BET', {
         id: this.props.pubkey,
-        amount: 2000,
+        amount: 2000
       })
     }
   }

@@ -15,22 +15,22 @@ function advanceOrder() {
 function betPrecheck(id, amount) {
   //Active Check
   if (this.round.active !== id) {
-    return false
+    return -3
   }
   //Betting Round Running Check
   if (!this.round.isBetting) {
-    return false
+    return -2
   }
   //Make sure new bet does not reduce player balance to zero or negative
   if (this.players[id].balance - amount <= 0) {
-    return false
+    return -1
   }
   //Make sure new bet surpasses current largest bet
   const playerBet = amount + this.bets[this.hand.state][id];
-  if (playerBet <= this.largestBet) {
-    return false
+  if (playerBet <= this.round.largestBet) {
+    return playerBet
   }
-  return true
+  return 1
 }
 //Bet
 //If player active make bet for player and change round state
