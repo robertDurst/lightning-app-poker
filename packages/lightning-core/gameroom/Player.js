@@ -10,8 +10,10 @@ class Player extends React.Component {
   render() {
     return (
     <div style={styles.Player}>
-      {this.props.title}{this.props.name}
-      <Accessibility />
+      <Accessibility /> <br />
+      {this.props.title}{this.props.name} <br />
+      AMT in: {this.props.currentBet}
+
     </div>
   )
   }
