@@ -5,6 +5,7 @@ var hostServer = require('./server');
 var axios = require('axios');
 var ngrok = require('../../../../ngrok/index.js');
 var ngrok2 = require('../../../../ngrok/index.js');
+const ipify = require('ipify');
 
 const host_socket = ioClient("https://secure-depths-49472.herokuapp.com/");
 const lightning_socket = ioClient("192.241.224.112:1279");
@@ -25,7 +26,9 @@ function disconnect() {
 async function connect(gameName, pubKey) {
   console.log("HERE", pubKey);
   hosting = true;
-  let external_ip = await publicIp.v4();
+  let external_ip = await ipify();
+
+
   let game = hostServer.startServer();
   ngrok.kill((data) => {
     console.log("ngrok killed", data);
