@@ -53,7 +53,6 @@ class Pot extends React.Component {
            ? ' ' + ((parseInt(this.props.gameState.hand.pot) + parseInt(this.props.gameState.round.pot))/100000000) + " BTC" : ' None'}
          </p>
 
-
       </div>)
   }
 }
