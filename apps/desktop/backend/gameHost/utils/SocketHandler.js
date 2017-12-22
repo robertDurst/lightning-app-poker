@@ -54,9 +54,7 @@ let SocketHandler = (io, Game) => {
         msg: "DATA",
         data,
       })
-
       const result = game.betPrecheck(data.id, data.amount);
-
       if (result === 1) {
         const memo = generateMemo(data.amount, data.id);
         lightning_socket.emit("BET", memo, data.amount)
@@ -68,8 +66,8 @@ let SocketHandler = (io, Game) => {
           socket.emit('INVOICE', invoice, data.amount)
           completePayment(memo, () => {
             io.emit("LOG", "FINISHED PAYMENT")
-            game.bet(data.id, () => {
-            }, data.amount)
+            const r1 = game.bet(data.id, null, data.amount)
+            socket.emit('LOG',r1)
             sendUpdate()
           })
         })
@@ -98,8 +96,7 @@ let SocketHandler = (io, Game) => {
           socket.emit('INVOICE', invoice, amount)
           completePayment(memo, () => {
             io.emit("LOG", "FINISHED PAYMENT")
-            game.call(data.id, () => {
-            }, amount)
+            game.call(data.id, null)
             sendUpdate()
           })
         })
