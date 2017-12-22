@@ -77,11 +77,11 @@ class Lobby extends React.Component {
      console.log("HOST IP",this.state.curGame.game_socket_ip)
      const socket = io(this.state.curGame.game_socket_ip);
 
-     this.props.roomnameUpdate(this.state.curGame.game_name)
-     console.log('rromname set to', this.state.curGame.game_name);
+     // this.props.roomnameUpdate(this.state.curGame.game_name)
+     // console.log('rromname set to', this.state.curGame.game_name);
 
      this.props.socketConnectionMade(socket);
-     console.log(store);
+     // console.log(store);
    }
 
    componentDidMount() {
