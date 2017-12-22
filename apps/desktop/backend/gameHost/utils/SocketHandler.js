@@ -50,22 +50,19 @@ let SocketHandler = (io, Game) => {
     // BET
     socket.on('BET', (data) => {
       // io.emit("LOG", "ID\n" + data.id)
-      io.emit("LOG", {
-        msg: "DATA",
-        data,
-      })
       const result = game.betPrecheck(data.id, data.amount);
+      io.emit("LOG", {
+        msg: "BET DATA",
+        data,
+        result
+      })
       if (result === 1) {
         const memo = generateMemo(data.amount, data.id);
         lightning_socket.emit("BET", memo, data.amount)
-        io.emit('LOG', {
-          msg: "MEMO",
-          memo
-        })
         betInvoice(memo, (invoice) => {
           socket.emit('INVOICE', invoice, data.amount)
           completePayment(memo, () => {
-            io.emit("LOG", "FINISHED PAYMENT")
+            io.emit("LOG", "FINISHED BET PAYMENT")
             const r1 = game.bet(data.id, null, data.amount)
             socket.emit('LOG',r1)
             sendUpdate()
@@ -84,22 +81,34 @@ let SocketHandler = (io, Game) => {
     // CALL
     socket.on('CALL', (data) => {
       const result = game.callCheck(data.id);
-      if (result) {
+      io.emit('LOG', {
+        msg: "CALL",
+        result,
+        round: game.round
+      })
+      if (result === 1) {
         const amount = game.callAmount(data.id)
-        const memo = generateMemo(amount, data.id);
-        lightning_socket.emit("BET", memo, amount)
-        io.emit('LOG', {
-          msg: "MEMO",
-          memo
-        })
-        betInvoice(memo, (invoice) => {
-          socket.emit('INVOICE', invoice, amount)
-          completePayment(memo, () => {
-            io.emit("LOG", "FINISHED PAYMENT")
-            game.call(data.id, null)
-            sendUpdate()
+        if (amount !== 0) {
+          const memo = generateMemo(amount, data.id);
+          lightning_socket.emit("BET", memo, amount)
+          io.emit('LOG', {
+            msg: "CALL",
+            amount,
+            result,
+            round: game.round
           })
-        })
+          betInvoice(memo, (invoice) => {
+            socket.emit('INVOICE', invoice, amount)
+            completePayment(memo, () => {
+              io.emit("LOG", "FINISHED CALL PAYMENT")
+              game.call(data.id, null)
+              sendUpdate()
+            })
+          })
+        } else {
+          game.call(data.id, null)
+          sendUpdate()
+        }
       }
     })
 
@@ -139,27 +148,7 @@ let SocketHandler = (io, Game) => {
       requestChoice(socket, id)
     })
   }
-  // function handleAction(bettingRound, data) {
-  //   if (bettingRound.order[bettingRound.index % bettingRound.order.length]) {
-  //     return bettingRound
-  //   } else {
-  //
-  //   }
-  //   switch (data.action) {
-  //     case "BET":
-  //       bettingRound.pot += data.amount
-  //       bettingRound.origin = data.socketId
-  //       break;
-  //     case "CALL":
-  //       bettingRound.index++
-  //       break;
-  //     case "FOLD":
-  //       bettingRound.players[data.socketId].folded = true;
-  //       break;
-  //     default:
-  //
-  //   }
-  // }
+
 
 }
 

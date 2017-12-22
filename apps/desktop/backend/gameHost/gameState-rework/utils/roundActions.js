@@ -79,24 +79,24 @@ function bet(id, cb, amount) {
 // Call check
 function callCheck(id) {
   if (this.round.active !== id) {
-    return false
+    return -2
   }
   //Betting Round Running Check
   if (!this.round.isBetting) {
-    return false
+    return -1
   }
   const playerBet = this.bets[this.hand.state][id];
   const callAmount = this.largestBet - playerBet;
-  if (playerBet < this.largestBet) {
-    return true
+  if (playerBet <= this.round.largestBet) {
+    return 1
   }
-  return false
+  return 0
 }
 
 // Call AMount
 function callAmount(id) {
   const playerBet = this.bets[this.hand.state][id];
-  const callAmount = this.largestBet - playerBet;
+  const callAmount = this.round.largestBet - playerBet;
   return callAmount
 }
 //Call
@@ -113,9 +113,9 @@ function call(id, cb) {
   }
   //Raise playerbet if necessary
   const playerBet = this.bets[this.hand.state][id];
-  const callAmount = this.largestBet - playerBet;
+  const callAmount = this.round.slargestBet - playerBet;
   //If passive bet made by call
-  if (playerBet < this.largestBet) {
+  if (playerBet < this.round.largestBet) {
     this.bets[this.hand.state][id] = this.largestBet
     this.round.pot += callAmount;
   }

@@ -34,9 +34,6 @@ function nextHandState() {
   } else {
     this.resolveHand()
   }
-  // if (cb) {
-  //   // cb()
-  // }
   return output(null)
 }
 //Resolve Betting round
@@ -59,9 +56,8 @@ function resolveRound() {
   const handOver = this.handEndCheck();
   if (handOver) {
     this.resolveHand()
-  } else {
-    this.nextHandState()
-  }
+  } 
+  this.nextHandState()
 }
 
 function handEndCheck() {

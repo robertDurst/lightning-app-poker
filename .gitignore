@@ -10,5 +10,5 @@ main.js.map
 
 # Webpack
 stats.json
-
+env.sh
 test_lnd
