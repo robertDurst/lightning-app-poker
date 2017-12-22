@@ -70,7 +70,19 @@ export default reactCSS({
     },
     container_body_gamespread: {
       flex: 10,
-      backgroundColor: 'yellow',
+      background: 'url(https://images.pexels.com/photos/518245/pexels-photo-518245.jpeg?w=1440&h=2939) no-repeat center center fixed',
+      display: 'flex',
+      width: '100%',
+      height: '100%',
+    },
+    container_body_gamespread_cards: {
+      flex: 5,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    container_body_gamespread_pot: {
+      flex: 1,
     },
     container_body_hand: {
       flex: 5,
