@@ -1,4 +1,4 @@
-import {generateMemo, lightning_socket, betInvoice, completePayment} from './paymentProcess';
+import {generateMemo, lightning_socket, betInvoice, completePayment, completePaymentRequest} from './paymentProcess';
 
 let SocketHandler = (io, Game) => {
   let game = undefined;
@@ -36,8 +36,9 @@ let SocketHandler = (io, Game) => {
     })
     socket.on('START_GAME', (data) => {
       game.startHand(() => {
-        // TODO: CALLBACK FOR END OF hand
         io.emit('LOG', "Hand is over")
+        const winnindSID = id2sid[game.hand.winner[0]];
+        io.sockets.sockets[winnindSID].emit("YOU_WIN", game.hand.pot);
       }, () => {
         // TODO: CALLBACK FOR END OF ROUND 1
         io.emit('LOG', "Round over: "+game.hand.state)
@@ -121,7 +122,11 @@ let SocketHandler = (io, Game) => {
         sendUpdate()
       }
     })
-
+    socket.on('GIMME_MONEY', ({paymentRequest, memo}) => {
+      completePaymentRequest(paymentRequest, () => {
+        
+      })
+    })
   });
 
   function sendUpdate() {
