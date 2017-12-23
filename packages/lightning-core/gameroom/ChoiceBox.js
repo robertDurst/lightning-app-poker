@@ -26,7 +26,8 @@ class ChoiceBox extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      betAmount: 0
+      betAmount: 0,
+      isReady: false
     }
   }
   makePacket(key,val) {
@@ -68,6 +69,9 @@ class ChoiceBox extends React.Component {
         displayName: this.props.player.name,
         socketId: this.props.socket.id,
         balance: this.props.state.core.accounts.balances.channel
+      })
+      this.setState({
+        isReady: true
       })
     }
   }
@@ -113,20 +117,20 @@ class ChoiceBox extends React.Component {
       <div name='CB ROOT' style={styles.choice_box_overall}>
       <RaisedButton style={styles.choice_box_card} label="Ready up" onClick={() => {
           this.handleReady()
-        }}/>
+        }} disabled={this.state.isReady} />
       <RaisedButton style={styles.choice_box_card} label="Start Game" onClick={() => {
           this.handleStart()
-        }}/>
+        }} disabled={!this.state.isReady} />
       <RaisedButton style={styles.choice_box_card} label="Call" onClick={() => {
           this.handleCall()
-        }}/>
+        }} disabled={!this.state.isReady} />
       <RaisedButton style={styles.choice_box_card} label="Bet" onClick={() => {
           this.handleBet()
-        }}/>
+        }} disabled={!this.state.isReady} />
       <RaisedButton style={styles.choice_box_card} label="Fold" onClick={() => {
           this.handleFold()
-        }}/>
-      <TextField hintText="Bet Amount" onChange={(e)=>{this.handleBetChange(e)}}/><br/>
+        }} disabled={!this.state.isReady} />
+      <TextField hintText="Bet Amount" disabled={!this.state.isReady} onChange={(e)=>{this.handleBetChange(e)}}/><br/>
     </div>)
   }
 }
