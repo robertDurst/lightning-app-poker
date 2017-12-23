@@ -67,6 +67,7 @@ class Game extends React.Component {
   }
 
   render() {
+    console.log(this.props.gameState);
     let bet = {};
     if(this.props.gameState.game) {
       let bets = this.props.gameState.game.bets;
@@ -146,13 +147,16 @@ class Game extends React.Component {
           </div>
         </div>
         <div name='footer' style={styles.container_footer}>
-          <marquee style={styles.container_footer_marquee}>{
-            this.props.gameState.hand ?
-            (this.props.gameState.hand.order[0] === this.props.state.core.accounts.pubkey
-                  ? "YOUR TURN, make a move."
-                  : this.props.gameState.players.filter( player => player.id === this.props.gameState.hand.order[0])[0].displayName + " is playing.")
-            : ""
-          }</marquee>
+          <marquee style={styles.container_footer_marquee}>
+            {
+              this.props.gameState.hand ?
+                (this.props.gameState.hand.winner ?
+                  "WINNER IS: " + this.props.gameState.players.filter( player => player.id ===  this.props.gameState.hand.winner[0])[0].displayName
+                  : ((this.props.gameState.hand.order[0] === this.props.state.core.accounts.pubkey
+                    ? "YOUR TURN, make a move."
+                    : this.props.gameState.players.filter( player => player.id === this.props.gameState.hand.order[0])[0].displayName + " is playing."))) : ""
+            }
+        </marquee>
         </div>
       </div>
   )
