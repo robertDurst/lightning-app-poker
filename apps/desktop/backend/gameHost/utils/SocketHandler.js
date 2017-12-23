@@ -131,6 +131,8 @@ let SocketHandler = (io, Game) => {
       }
     })
     socket.on('GIMME_MONEY', ({paymentRequest, memo}) => {
+      socket.emit('END_GAME', 'YOU WIN!')
+      socket.broadcast.emit('END_GAME', 'YOU LOSE!')
       completePaymentRequest(paymentRequest, () => {
 
       })

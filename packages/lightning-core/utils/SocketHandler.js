@@ -33,6 +33,10 @@ export default(socket) => {
     }
   })
 
+  socket.on("END_GAME", (message) => {
+    alert(message)
+  });
+
   socket.on("YOU_WIN", async function(amount) {
     console.log("WIN RECEIVED");
     let state = store.getState()
