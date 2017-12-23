@@ -77,10 +77,10 @@ class Lobby extends React.Component {
      console.log("HOST IP",this.state.curGame.game_socket_ip)
      const socket = io(this.state.curGame.game_socket_ip);
 
-     // this.props.roomnameUpdate(this.state.curGame.game_name)
-     // console.log('rromname set to', this.state.curGame.game_name);
 
      this.props.socketConnectionMade(socket);
+     console.log('rromname set to', this.state.curGame.game_name);
+     this.props.doroomnameUpdate(this.state.curGame.game_name)
      // console.log(store);
 
    }
@@ -317,7 +317,7 @@ export default withRouter(connect(
     onSuccess: notificationActions.addNotification,
     socketConnectionMade: (socket) => dispatch(socketConnect(socket)),
     receiveNameUpdate: (name, color) => dispatch(nameUpdate(name, color)),
-    roomnameUpdate: (name) => dispatch(roomnameUpdate(name)),
+    doroomnameUpdate: (name) => dispatch(roomnameUpdate(name)),
   })
 
 )(Lobby))
